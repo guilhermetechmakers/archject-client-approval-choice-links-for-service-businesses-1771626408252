@@ -316,9 +316,7 @@ export function AdminAnalytics({
           </Link>
         </Button>
         <Button asChild variant="outline">
-          <Link to="/dashboard/orders">
-            View Transactions
-          </Link>
+          <Link to="/dashboard/orders">View Transactions</Link>
         </Button>
       </div>
     </div>

@@ -74,7 +74,8 @@ export async function fetchAdminAnalytics(): Promise<AdminAnalyticsResponse> {
           },
         }
       )
-      if (!error && data) return data
+      if (error) throw new Error(error.message ?? 'Failed to fetch analytics')
+      if (data) return data
     }
   }
   return MOCK_RESPONSE

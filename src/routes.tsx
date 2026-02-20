@@ -6,6 +6,7 @@ import { SignupPage } from '@/pages/signup'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
 import { EmailVerificationPage } from '@/pages/email-verification'
 import { HelpPage } from '@/pages/help'
+import HelpCenterPage from '@/pages/About/HelpCenter'
 import { PrivacyPage } from '@/pages/privacy'
 import { TermsPage } from '@/pages/terms'
 import { CookiesPage } from '@/pages/cookies'
@@ -38,6 +39,8 @@ export const router = createBrowserRouter([
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
   { path: '/verify-email', element: <EmailVerificationPage /> },
   { path: '/help', element: <HelpPage /> },
+  { path: '/about/help-center', element: <HelpCenterPage /> },
+  { path: '/about-/-help-center', element: <HelpCenterPage /> },
   { path: '/privacy', element: <PrivacyPage /> },
   { path: '/terms', element: <TermsPage /> },
   { path: '/cookies', element: <CookiesPage /> },

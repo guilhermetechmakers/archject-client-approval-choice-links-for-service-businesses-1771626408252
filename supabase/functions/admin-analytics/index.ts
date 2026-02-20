@@ -65,6 +65,23 @@ Deno.serve(async (req) => {
       )
     }
 
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    )
+    const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    const isAdmin = profile?.role === 'Admin'
+    if (!isAdmin) {
+      return new Response(
+        JSON.stringify({ error: 'Forbidden: Admin role required' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
     const url = new URL(req.url)
     let action = url.searchParams.get('action') ?? 'dashboard'
     let body: Record<string, unknown> = {}
@@ -78,10 +95,9 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'dashboard') {
-      const { data: analyticsRows } = await supabase
+      const { data: analyticsRows } = await supabaseAdmin
         .from('admin_analytics')
         .select('*')
-        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(100)
 
@@ -101,10 +117,9 @@ Deno.serve(async (req) => {
         { name: 'Mar', users: 18, links: 78, approvals: 42 },
       ]
 
-      const { data: auditLogs } = await supabase
+      const { data: auditLogs } = await supabaseAdmin
         .from('admin_audit_logs')
         .select('*')
-        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(20)
 
@@ -124,10 +139,9 @@ Deno.serve(async (req) => {
       const startDate = body.startDate as string | undefined
       const endDate = body.endDate as string | undefined
 
-      const { data: analyticsRows } = await supabase
+      const { data: analyticsRows } = await supabaseAdmin
         .from('admin_analytics')
         .select('*')
-        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 
       let exportData = analyticsRows ?? []

@@ -8,7 +8,7 @@ const footerLinks = {
     { label: 'Blog', href: '/blog' },
   ],
   Help: [
-    { label: 'Help Center', href: '/help' },
+    { label: 'Help Center', href: '/about/help-center' },
     { label: 'Documentation', href: '/docs' },
     { label: 'Contact', href: '/contact' },
   ],

@@ -164,7 +164,7 @@ export function AppSidebar() {
       {!collapsed && (
         <div className="border-t border-border p-4">
           <Link
-            to="/help"
+            to="/about/help-center"
             className="flex items-center gap-2 text-caption text-muted-foreground hover:text-foreground"
           >
             <HelpCircle className="h-4 w-4" />
