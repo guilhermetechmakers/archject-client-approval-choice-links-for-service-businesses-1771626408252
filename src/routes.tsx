@@ -38,6 +38,7 @@ export const router = createBrowserRouter([
   { path: '/signup', element: <SignupPage /> },
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
   { path: '/verify-email', element: <EmailVerificationPage /> },
+  { path: '/email-verification-page', element: <EmailVerificationPage /> },
   { path: '/help', element: <HelpPage /> },
   { path: '/about/help-center', element: <HelpCenterPage /> },
   { path: '/about-/-help-center', element: <HelpCenterPage /> },

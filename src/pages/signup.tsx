@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -8,6 +8,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LandingHeader } from '@/components/layout/landing-header'
+import { setPendingVerifiedEmail } from '@/pages/email-verification'
+import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
 
 const signupSchema = z
   .object({
@@ -24,6 +27,7 @@ type SignupForm = z.infer<typeof signupSchema>
 
 export function SignupPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -32,11 +36,29 @@ export function SignupPage() {
     resolver: zodResolver(signupSchema),
   })
 
-  const onSubmit = async (_data: SignupForm) => {
+  const onSubmit = async (data: SignupForm) => {
     setIsLoading(true)
     try {
-      // TODO: API call
-      await new Promise((r) => setTimeout(r, 1000))
+      if (supabase) {
+        const { error } = await supabase.auth.signUp({
+          email: data.email,
+          password: data.password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/verify-email?status=success`,
+          },
+        })
+        if (error) {
+          toast.error(error.message)
+          return
+        }
+        setPendingVerifiedEmail(data.email)
+        navigate('/email-verification-page?status=pending')
+        toast.success('Check your email to verify your account')
+      } else {
+        await new Promise((r) => setTimeout(r, 1000))
+        setPendingVerifiedEmail(data.email)
+        navigate('/email-verification-page?status=pending')
+      }
     } finally {
       setIsLoading(false)
     }
