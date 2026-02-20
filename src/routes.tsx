@@ -29,6 +29,7 @@ import ApprovalRequestDetailPage from '@/pages/ApprovalRequestDetail'
 import { ProfilePage } from '@/pages/dashboard/profile'
 import { AdminOverviewPage } from '@/pages/dashboard/admin-overview'
 import { AdminUsersPage } from '@/pages/dashboard/admin-users'
+import PreferencesPage from '@/pages/Settings/Preferences'
 
 export const router = createBrowserRouter([
   { path: '/', element: <LandingPage /> },
@@ -63,6 +64,7 @@ export const router = createBrowserRouter([
       { path: 'approval-request-detail/:id', element: <ApprovalRequestDetailPage /> },
       { path: 'exports', element: <DashboardExports /> },
       { path: 'settings', element: <DashboardSettings /> },
+      { path: 'settings-/-preferences', element: <PreferencesPage /> },
       { path: 'profile', element: <ProfilePage /> },
       { path: 'orders', element: <OrdersPage /> },
       { path: 'admin', element: <AdminOverviewPage /> },

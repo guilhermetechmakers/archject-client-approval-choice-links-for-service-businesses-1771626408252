@@ -29,6 +29,7 @@ const secondaryNav = [
   { title: 'Exports', href: '/dashboard/exports', icon: Download },
   { title: 'Orders', href: '/dashboard/orders', icon: Receipt },
   { title: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { title: 'Preferences', href: '/dashboard/settings-/-preferences', icon: Settings },
 ]
 
 const adminNav = [

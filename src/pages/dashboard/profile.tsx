@@ -1,9 +1,11 @@
+import { Link } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Settings } from 'lucide-react'
 
 export function ProfilePage() {
   return (
@@ -59,7 +61,17 @@ export function ProfilePage() {
               <CardTitle>Company Settings</CardTitle>
               <CardDescription>Name, logo, branded domain</CardDescription>
             </CardHeader>
-            <CardContent>Company settings form</CardContent>
+            <CardContent className="space-y-4">
+              <p className="text-body text-muted-foreground">
+                Manage global settings, brand configuration, and default behaviors.
+              </p>
+              <Button asChild variant="outline">
+                <Link to="/dashboard/settings-/-preferences" className="flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Open Settings & Preferences
+                </Link>
+              </Button>
+            </CardContent>
           </Card>
         </TabsContent>
 
