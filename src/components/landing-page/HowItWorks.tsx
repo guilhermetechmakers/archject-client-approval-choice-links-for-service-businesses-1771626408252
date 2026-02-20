@@ -26,10 +26,16 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 bg-card scroll-mt-20">
+    <section
+      id="how-it-works"
+      className="py-24 bg-card scroll-mt-20"
+      aria-labelledby="how-it-works-heading"
+    >
       <div className="container">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
-          <h2 className="text-h1 font-bold">How it works</h2>
+          <h2 id="how-it-works-heading" className="text-h1 font-bold">
+            How it works
+          </h2>
           <p className="mt-4 text-body text-muted-foreground">
             Three simple steps to get client approvals
           </p>

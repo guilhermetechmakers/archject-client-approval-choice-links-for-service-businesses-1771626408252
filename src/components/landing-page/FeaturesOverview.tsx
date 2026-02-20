@@ -39,10 +39,16 @@ const features: {
 
 export function FeaturesOverview() {
   return (
-    <section id="features" className="py-24 scroll-mt-20">
+    <section
+      id="features"
+      className="py-24 scroll-mt-20"
+      aria-labelledby="features-heading"
+    >
       <div className="container">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
-          <h2 className="text-h1 font-bold">Built for service businesses</h2>
+          <h2 id="features-heading" className="text-h1 font-bold">
+            Built for service businesses
+          </h2>
           <p className="mt-4 text-body text-muted-foreground">
             Everything you need to streamline client approvals
           </p>

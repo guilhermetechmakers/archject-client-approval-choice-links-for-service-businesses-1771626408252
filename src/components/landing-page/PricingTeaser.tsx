@@ -35,10 +35,16 @@ const tiers = [
 
 export function PricingTeaser() {
   return (
-    <section id="pricing" className="py-24 scroll-mt-20">
+    <section
+      id="pricing"
+      className="py-24 scroll-mt-20"
+      aria-labelledby="pricing-heading"
+    >
       <div className="container">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
-          <h2 className="text-h1 font-bold">Simple pricing</h2>
+          <h2 id="pricing-heading" className="text-h1 font-bold">
+            Simple pricing
+          </h2>
           <p className="mt-4 text-body text-muted-foreground">
             Start free, scale as you grow
           </p>
@@ -48,12 +54,12 @@ export function PricingTeaser() {
           {tiers.map((tier, i) => (
             <Card
               key={tier.name}
-              className={`relative transition-all duration-300 hover:shadow-modal hover:-translate-y-1 ${
+              className={`relative transition-all duration-300 hover:shadow-modal hover:-translate-y-0.5 hover:border-primary/30 ${
                 tier.highlighted
                   ? 'border-primary/50 shadow-lg ring-2 ring-primary/20'
                   : 'hover:border-primary/20'
               } animate-fade-in-up`}
-              style={{ animationDelay: `${i * 100}ms` }}
+              style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'both' }}
             >
               {tier.highlighted && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-caption font-medium text-primary-foreground">
@@ -82,7 +88,7 @@ export function PricingTeaser() {
                 <Button
                   asChild
                   variant={tier.highlighted ? 'default' : 'outline'}
-                  className="w-full mt-6"
+                  className="w-full mt-6 hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
                 >
                   <Link to="/pricing">{tier.cta}</Link>
                 </Button>
@@ -92,7 +98,12 @@ export function PricingTeaser() {
         </div>
 
         <div className="mt-12 text-center">
-          <Button asChild size="lg" variant="outline">
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
+          >
             <Link to="/pricing">View full pricing</Link>
           </Button>
         </div>

@@ -61,7 +61,12 @@ export function CustomerLogosTestimonials() {
         </div>
 
         {/* Testimonials carousel */}
-        <div className="mt-16 relative min-h-[200px]">
+        <div
+          className="mt-16 relative min-h-[200px]"
+          role="region"
+          aria-roledescription="Testimonials carousel"
+          aria-label="Customer testimonials"
+        >
           {testimonials.map((testimonial, i) => (
             <div
               key={testimonial.author}
@@ -71,6 +76,9 @@ export function CustomerLogosTestimonials() {
                   : 'opacity-0 absolute inset-x-0 top-0 translate-x-8 pointer-events-none'
               }`}
               aria-hidden={i !== activeIndex}
+              role="group"
+              aria-roledescription="Testimonial"
+              aria-label={`Testimonial ${i + 1} of ${testimonials.length}`}
             >
               <div className="mx-auto max-w-2xl">
                 <div className="relative rounded-2xl border border-border bg-background p-8 shadow-card">
@@ -93,17 +101,27 @@ export function CustomerLogosTestimonials() {
           ))}
 
           {/* Carousel indicators */}
-          <div className="mt-8 flex justify-center gap-2">
+          <div
+            className="mt-8 flex justify-center gap-2"
+            role="tablist"
+            aria-label="Testimonial navigation"
+          >
             {testimonials.map((_, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => setActiveIndex(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === activeIndex ? 'w-8 bg-primary' : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'
-                }`}
+                className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full p-2 transition-colors duration-300 hover:bg-muted-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 aria-label={`Go to testimonial ${i + 1}`}
-              />
+                aria-selected={i === activeIndex}
+                role="tab"
+              >
+                <span
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === activeIndex ? 'w-8 bg-primary' : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>

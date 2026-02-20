@@ -3,14 +3,14 @@ import { Github, Twitter, Linkedin } from 'lucide-react'
 
 const footerLinks = {
   About: [
-    { label: 'About us', href: '/about' },
-    { label: 'Careers', href: '/careers' },
-    { label: 'Blog', href: '/blog' },
+    { label: 'About us', href: '/about/help-center' },
+    { label: 'Careers', href: '/request-demo' },
+    { label: 'Blog', href: '/help' },
   ],
   Help: [
     { label: 'Help Center', href: '/about/help-center' },
-    { label: 'Documentation', href: '/docs' },
-    { label: 'Contact', href: '/contact' },
+    { label: 'Documentation', href: '/about/help-center' },
+    { label: 'Contact', href: '/request-demo' },
   ],
   Legal: [
     { label: 'Privacy Policy', href: '/privacy' },
@@ -27,7 +27,10 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-card">
+    <footer
+      className="border-t border-border bg-card"
+      role="contentinfo"
+    >
       <div className="container py-16">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {Object.entries(footerLinks).map(([title, links]) => (
@@ -38,7 +41,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-caption text-muted-foreground transition-colors hover:text-foreground"
+                      className="text-caption text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md py-1 px-1 -mx-1 inline-block"
                     >
                       {link.label}
                     </Link>
@@ -58,8 +61,8 @@ export function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:scale-105"
-                  aria-label={label}
+                  className="flex h-10 w-10 min-w-[44px] min-h-[44px] items-center justify-center rounded-lg bg-muted text-muted-foreground transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  aria-label={`Follow us on ${label}`}
                 >
                   <Icon className="h-5 w-5" />
                 </a>
@@ -72,20 +75,20 @@ export function Footer() {
           <p className="text-caption text-muted-foreground">
             © {new Date().getFullYear()} Archject. All rights reserved.
           </p>
-          <div className="flex gap-6">
+          <nav aria-label="Footer legal links" className="flex gap-6">
             <Link
               to="/privacy"
-              className="text-caption text-muted-foreground transition-colors hover:text-foreground"
+              className="text-caption text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md py-1 px-1 -mx-1"
             >
               Privacy
             </Link>
             <Link
               to="/terms"
-              className="text-caption text-muted-foreground transition-colors hover:text-foreground"
+              className="text-caption text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md py-1 px-1 -mx-1"
             >
               Terms
             </Link>
-          </div>
+          </nav>
         </div>
       </div>
     </footer>

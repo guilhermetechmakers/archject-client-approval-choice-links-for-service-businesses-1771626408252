@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,55 +10,85 @@ import {
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const navLinks = [
-  { to: '/#features', label: 'Features' },
-  { to: '/#how-it-works', label: 'How it works' },
-  { to: '/#pricing', label: 'Pricing' },
+const navSections = [
+  { hash: 'features', label: 'Features' },
+  { hash: 'how-it-works', label: 'How it works' },
+  { hash: 'pricing', label: 'Pricing' },
 ]
 
 export function LandingHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const location = useLocation()
+  const basePath = location.pathname === '/' ? '/' : location.pathname
+  const hashLink = (hash: string) => `${basePath}#${hash}`
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+    <header
+      className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      role="banner"
+    >
+      <div className="container flex h-16 min-h-[44px] items-center justify-between">
         <Link
           to="/"
-          className="flex items-center gap-2 transition-opacity hover:opacity-90"
+          className="flex items-center gap-2 transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md p-1 -m-1"
+          aria-label="Archject home"
         >
           <span className="text-h2 font-bold text-primary">Archject</span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
+        <nav
+          className="hidden md:flex items-center gap-6"
+          aria-label="Main navigation"
+        >
+          {navSections.map(({ hash, label }) => (
             <Link
-              key={link.to}
-              to={link.to}
-              className="text-body text-muted-foreground transition-colors hover:text-foreground"
+              key={hash}
+              to={hashLink(hash)}
+              className="text-body text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md py-2 px-1 -mx-1"
             >
-              {link.label}
+              {label}
             </Link>
           ))}
           <Link
             to="/login"
-            className="text-body text-muted-foreground transition-colors hover:text-foreground"
+            className="text-body text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md py-2 px-1 -mx-1"
           >
             Log in
           </Link>
-          <Button asChild size="sm" className="hover:scale-[1.02] transition-transform">
+          <Link
+            to="/request-demo"
+            className="text-body text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md py-2 px-1 -mx-1"
+          >
+            Request demo
+          </Link>
+          <Button
+            asChild
+            size="sm"
+            className="hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
+          >
             <Link to="/signup">Sign up free</Link>
           </Button>
         </nav>
 
         {/* Mobile: hamburger + drawer */}
         <div className="flex md:hidden items-center gap-2">
-          <Button asChild size="sm">
+          <Button
+            asChild
+            size="sm"
+            className="min-h-[44px] min-w-[44px] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+          >
             <Link to="/signup">Sign up</Link>
           </Button>
           <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open menu">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Open menu"
+                aria-expanded={mobileOpen}
+                className="min-h-[44px] min-w-[44px]"
+              >
                 <Menu className="h-5 w-5" />
               </Button>
             </DialogTrigger>
@@ -72,25 +102,35 @@ export function LandingHeader() {
             >
               <div className="flex flex-col h-full pt-16">
                 <DialogTitle className="sr-only">Navigation menu</DialogTitle>
-                <nav className="flex flex-col gap-6">
-                  {navLinks.map((link) => (
+                <nav
+                  className="flex flex-col gap-6"
+                  aria-label="Mobile navigation"
+                >
+                  {navSections.map(({ hash, label }) => (
                     <Link
-                      key={link.to}
-                      to={link.to}
+                      key={hash}
+                      to={hashLink(hash)}
                       onClick={() => setMobileOpen(false)}
-                      className="text-body font-medium text-foreground hover:text-primary transition-colors py-2"
+                      className="text-body font-medium text-foreground hover:text-primary transition-colors py-3 min-h-[44px] flex items-center"
                     >
-                      {link.label}
+                      {label}
                     </Link>
                   ))}
                   <Link
                     to="/login"
                     onClick={() => setMobileOpen(false)}
-                    className="text-body font-medium text-foreground hover:text-primary transition-colors py-2"
+                    className="text-body font-medium text-foreground hover:text-primary transition-colors py-3 min-h-[44px] flex items-center"
                   >
                     Log in
                   </Link>
-                  <Button asChild className="mt-4">
+                  <Link
+                    to="/request-demo"
+                    onClick={() => setMobileOpen(false)}
+                    className="text-body font-medium text-foreground hover:text-primary transition-colors py-3 min-h-[44px] flex items-center"
+                  >
+                    Request demo
+                  </Link>
+                  <Button asChild className="mt-4 min-h-[44px]">
                     <Link to="/signup" onClick={() => setMobileOpen(false)}>
                       Sign up free
                     </Link>
@@ -100,7 +140,7 @@ export function LandingHeader() {
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 p-2"
+                className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Close menu"
               >
                 <X className="h-5 w-5" />

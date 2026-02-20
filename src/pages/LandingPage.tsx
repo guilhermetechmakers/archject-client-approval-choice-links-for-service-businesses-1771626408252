@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { LandingHeader } from '@/components/layout/landing-header'
@@ -13,6 +13,12 @@ import {
 } from '@/components/landing-page'
 import { useLandingPage } from '@/hooks/use-landing-page'
 import { AlertCircle } from 'lucide-react'
+
+const SEO = {
+  title: 'Archject — Client Approval & Choice Links for Service Businesses',
+  description:
+    'Replace clunky email threads with branded, auditable choice links. Get timestamped, legally robust client decisions with minimal friction.',
+}
 
 function LandingPageSkeleton() {
   return (
@@ -82,10 +88,23 @@ function LandingPageError({ onRetry }: { onRetry: () => void }) {
 
 export function LandingPage() {
   const { isLoading, isError, refetch } = useLandingPage()
+  const location = useLocation()
 
   useEffect(() => {
-    document.title = 'Archject — Client Approval & Choice Links for Service Businesses'
+    document.title = SEO.title
+    const metaDesc = document.querySelector('meta[name="description"]')
+    if (metaDesc) metaDesc.setAttribute('content', SEO.description)
   }, [])
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.slice(1)
+      const el = document.getElementById(id)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+  }, [location.hash])
 
   if (isLoading) {
     return <LandingPageSkeleton />
@@ -97,8 +116,11 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <a href="#main-content" className="skip-link focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+        Skip to main content
+      </a>
       <LandingHeader />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1" role="main">
         <HeroSection />
         <FeaturesOverview />
         <HowItWorks />
