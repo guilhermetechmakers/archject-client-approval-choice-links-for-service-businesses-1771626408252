@@ -1,0 +1,6 @@
+export { HeroSection } from './HeroSection'
+export { FeaturesOverview } from './FeaturesOverview'
+export { HowItWorks } from './HowItWorks'
+export { PricingTeaser } from './PricingTeaser'
+export { CustomerLogosTestimonials } from './CustomerLogosTestimonials'
+export { Footer } from './Footer'

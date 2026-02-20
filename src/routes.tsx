@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { LandingPage } from '@/pages/landing'
+import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/login'
 import { SignupPage } from '@/pages/signup'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
@@ -8,6 +8,7 @@ import { HelpPage } from '@/pages/help'
 import { PrivacyPage } from '@/pages/privacy'
 import { TermsPage } from '@/pages/terms'
 import { CookiesPage } from '@/pages/cookies'
+import { PricingPage } from '@/pages/pricing'
 import { NotFoundPage } from '@/pages/not-found'
 import { ErrorPage } from '@/pages/error'
 import { ClientReviewPage } from '@/pages/client-review'
@@ -28,6 +29,7 @@ import { AdminUsersPage } from '@/pages/dashboard/admin-users'
 
 export const router = createBrowserRouter([
   { path: '/', element: <LandingPage /> },
+  { path: '/landing-page', element: <LandingPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/signup', element: <SignupPage /> },
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
@@ -36,6 +38,7 @@ export const router = createBrowserRouter([
   { path: '/privacy', element: <PrivacyPage /> },
   { path: '/terms', element: <TermsPage /> },
   { path: '/cookies', element: <CookiesPage /> },
+  { path: '/pricing', element: <PricingPage /> },
   { path: '/checkout', element: <CheckoutPage /> },
   { path: '/review/:token', element: <ClientReviewPage /> },
   {
