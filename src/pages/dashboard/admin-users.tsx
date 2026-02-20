@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+import { ChevronRight } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,7 +11,19 @@ const mockUsers = [
 
 export function AdminUsersPage() {
   return (
-    <div className="space-y-8 animate-fade-in-up">
+    <div className="space-y-6 animate-fade-in-up">
+      <nav className="flex items-center gap-2 text-caption text-muted-foreground">
+        <Link to="/dashboard/overview" className="hover:text-foreground transition-colors">
+          Dashboard
+        </Link>
+        <ChevronRight className="h-4 w-4" />
+        <Link to="/dashboard/admin" className="hover:text-foreground transition-colors">
+          Admin
+        </Link>
+        <ChevronRight className="h-4 w-4" />
+        <span className="text-foreground font-medium">Users</span>
+      </nav>
+
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-h1 font-bold">User Management</h1>
