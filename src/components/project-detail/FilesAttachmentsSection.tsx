@@ -8,6 +8,7 @@ interface FilesAttachmentsSectionProps {
   files: ProjectFile[]
   isLoading?: boolean
   onUpload?: () => void
+  searchQuery?: string
 }
 
 function formatFileSize(bytes?: number) {
@@ -17,11 +18,19 @@ function formatFileSize(bytes?: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
+function filterFiles(files: ProjectFile[], searchQuery?: string): ProjectFile[] {
+  if (!searchQuery?.trim()) return files
+  const q = searchQuery.trim().toLowerCase()
+  return files.filter((f) => f.name.toLowerCase().includes(q))
+}
+
 export function FilesAttachmentsSection({
   files,
   isLoading,
   onUpload,
+  searchQuery,
 }: FilesAttachmentsSectionProps) {
+  const filteredFiles = filterFiles(files, searchQuery)
   if (isLoading) {
     return (
       <Card>
@@ -58,21 +67,33 @@ export function FilesAttachmentsSection({
         </div>
       </CardHeader>
       <CardContent>
-        {!files.length ? (
+        {!filteredFiles.length ? (
           <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border py-12 text-center">
-            <Upload className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-h3 font-medium mb-1">No files yet</h3>
-            <p className="text-body text-muted-foreground mb-4 max-w-sm">
-              Upload floor plans, images, or documents for client review.
-            </p>
-            <Button onClick={onUpload}>
-              <Upload className="h-4 w-4" />
-              Upload file
-            </Button>
+            {searchQuery ? (
+              <>
+                <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-h3 font-medium mb-1">No matching files</h3>
+                <p className="text-body text-muted-foreground mb-4 max-w-sm">
+                  Try adjusting your search to find files.
+                </p>
+              </>
+            ) : (
+              <>
+                <Upload className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-h3 font-medium mb-1">No files yet</h3>
+                <p className="text-body text-muted-foreground mb-4 max-w-sm">
+                  Upload floor plans, images, or documents for client review.
+                </p>
+                <Button onClick={onUpload}>
+                  <Upload className="h-4 w-4" />
+                  Upload file
+                </Button>
+              </>
+            )}
           </div>
         ) : (
           <div className="space-y-4">
-            {files.map((file) => {
+            {filteredFiles.map((file) => {
               const isImage = file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)
               return (
                 <div

@@ -6,6 +6,7 @@ import type { ClientContact } from '@/types/project-detail'
 interface ClientContactsProps {
   contacts: ClientContact[]
   isLoading?: boolean
+  searchQuery?: string
 }
 
 function formatLastResponse(dateStr?: string) {
@@ -20,7 +21,19 @@ function formatLastResponse(dateStr?: string) {
   return date.toLocaleDateString()
 }
 
-export function ClientContacts({ contacts, isLoading }: ClientContactsProps) {
+function filterContacts(contacts: ClientContact[], searchQuery?: string): ClientContact[] {
+  if (!searchQuery?.trim()) return contacts
+  const q = searchQuery.trim().toLowerCase()
+  return contacts.filter(
+    (c) =>
+      c.name.toLowerCase().includes(q) ||
+      c.email.toLowerCase().includes(q) ||
+      (c.phone?.toLowerCase().includes(q) ?? false)
+  )
+}
+
+export function ClientContacts({ contacts, isLoading, searchQuery }: ClientContactsProps) {
+  const filteredContacts = filterContacts(contacts, searchQuery)
   if (isLoading) {
     return (
       <Card>
@@ -39,7 +52,7 @@ export function ClientContacts({ contacts, isLoading }: ClientContactsProps) {
     )
   }
 
-  if (!contacts.length) {
+  if (!contacts.length && !searchQuery) {
     return (
       <Card>
         <CardHeader>
@@ -72,8 +85,17 @@ export function ClientContacts({ contacts, isLoading }: ClientContactsProps) {
         <CardDescription>Contacts for this project</CardDescription>
       </CardHeader>
       <CardContent>
+        {!filteredContacts.length && searchQuery ? (
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-12 text-center">
+            <Users className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-h3 font-medium mb-1">No matching contacts</h3>
+            <p className="text-body text-muted-foreground max-w-sm">
+              Try adjusting your search to find contacts.
+            </p>
+          </div>
+        ) : (
         <div className="space-y-4">
-          {contacts.map((contact) => (
+          {filteredContacts.map((contact) => (
             <div
               key={contact.id}
               className="rounded-lg border border-border p-4 transition-all duration-200 hover:shadow-popover"
@@ -102,6 +124,7 @@ export function ClientContacts({ contacts, isLoading }: ClientContactsProps) {
             </div>
           ))}
         </div>
+        )}
       </CardContent>
     </Card>
   )

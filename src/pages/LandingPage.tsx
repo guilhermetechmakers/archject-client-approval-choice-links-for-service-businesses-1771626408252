@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -82,6 +83,10 @@ function LandingPageError({ onRetry }: { onRetry: () => void }) {
 export function LandingPage() {
   const { isLoading, isError, refetch } = useLandingPage()
 
+  useEffect(() => {
+    document.title = 'Archject — Client Approval & Choice Links for Service Businesses'
+  }, [])
+
   if (isLoading) {
     return <LandingPageSkeleton />
   }
@@ -109,9 +114,14 @@ export function LandingPage() {
                 <p className="mt-4 text-body text-muted-foreground">
                   Create your free account and send your first approval link today.
                 </p>
-                <Button asChild size="lg" className="mt-8 hover:scale-[1.02] transition-transform">
-                  <Link to="/signup">Sign up free</Link>
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                  <Button asChild size="lg" className="hover:scale-[1.02] transition-transform">
+                    <Link to="/signup">Sign up free</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="hover:scale-[1.02] transition-transform">
+                    <Link to="/request-demo">Request demo</Link>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

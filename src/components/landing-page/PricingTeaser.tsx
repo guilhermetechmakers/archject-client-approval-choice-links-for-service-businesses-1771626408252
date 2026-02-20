@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { ScrollReveal } from './ScrollReveal'
 
 const tiers = [
   {
@@ -36,12 +37,12 @@ export function PricingTeaser() {
   return (
     <section id="pricing" className="py-24 scroll-mt-20">
       <div className="container">
-        <div className="mx-auto max-w-2xl text-center">
+        <ScrollReveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-h1 font-bold">Simple pricing</h2>
           <p className="mt-4 text-body text-muted-foreground">
             Start free, scale as you grow
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {tiers.map((tier, i) => (

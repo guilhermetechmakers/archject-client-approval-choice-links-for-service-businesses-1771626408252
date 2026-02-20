@@ -1,8 +1,10 @@
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, FileCheck, Clock } from 'lucide-react'
+import { Plus, FileCheck, Clock, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Input } from '@/components/ui/input'
 
 const mockApprovals = [
   { id: '1', title: 'Cabinet Selection', project: 'Kitchen Renovation', status: 'pending', deadline: '2025-02-25' },
@@ -11,6 +13,18 @@ const mockApprovals = [
 ]
 
 export function DashboardApprovals() {
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredApprovals = useMemo(() => {
+    if (!searchQuery.trim()) return mockApprovals
+    const q = searchQuery.trim().toLowerCase()
+    return mockApprovals.filter(
+      (a) =>
+        a.title.toLowerCase().includes(q) ||
+        a.project.toLowerCase().includes(q)
+    )
+  }, [searchQuery])
+
   return (
     <div className="space-y-8 animate-fade-in-up">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -28,6 +42,17 @@ export function DashboardApprovals() {
         </Button>
       </div>
 
+      <div className="relative max-w-md">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          placeholder="Search approvals..."
+          className="pl-9 transition-all duration-200 focus:border-primary"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Search approvals"
+        />
+      </div>
+
       <Tabs defaultValue="all" className="space-y-6">
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
@@ -36,7 +61,16 @@ export function DashboardApprovals() {
         </TabsList>
         <TabsContent value="all" className="space-y-4">
           <div className="space-y-4">
-            {mockApprovals.map((approval) => (
+            {filteredApprovals.length === 0 ? (
+              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-16 text-center">
+                <FileCheck className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-h3 font-medium mb-1">No matching approvals</h3>
+                <p className="text-body text-muted-foreground max-w-sm">
+                  Try adjusting your search to find approval requests.
+                </p>
+              </div>
+            ) : (
+            filteredApprovals.map((approval) => (
               <Card key={approval.id} className="transition-all duration-300 hover:shadow-popover">
                 <CardContent className="flex items-center justify-between p-6">
                   <div className="flex items-center gap-4">
@@ -77,7 +111,8 @@ export function DashboardApprovals() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            ))
+            )}
           </div>
         </TabsContent>
         <TabsContent value="pending">Pending approvals list</TabsContent>

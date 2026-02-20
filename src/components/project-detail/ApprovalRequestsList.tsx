@@ -1,13 +1,25 @@
 import { Link } from 'react-router-dom'
-import { FileCheck, CheckCircle, XCircle, Clock, Send } from 'lucide-react'
+import { FileCheck, CheckCircle, XCircle, Clock, Send, Filter } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { ApprovalRequestSummary } from '@/types/project-detail'
+
+const STATUS_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: 'sent', label: 'Sent' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'approved', label: 'Approved' },
+  { value: 'declined', label: 'Declined' },
+] as const
 
 interface ApprovalRequestsListProps {
   approvals: ApprovalRequestSummary[]
   isLoading?: boolean
+  searchQuery?: string
+  statusFilter?: string
+  onStatusFilterChange?: (status: string) => void
 }
 
 const statusConfig: Record<
@@ -26,7 +38,34 @@ function formatDate(dateStr?: string) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-export function ApprovalRequestsList({ approvals, isLoading }: ApprovalRequestsListProps) {
+function filterApprovals(
+  approvals: ApprovalRequestSummary[],
+  searchQuery?: string,
+  statusFilter?: string
+): ApprovalRequestSummary[] {
+  let filtered = approvals
+  if (searchQuery?.trim()) {
+    const q = searchQuery.trim().toLowerCase()
+    filtered = filtered.filter(
+      (a) =>
+        a.title.toLowerCase().includes(q) ||
+        a.id.toLowerCase().includes(q)
+    )
+  }
+  if (statusFilter && statusFilter !== 'all') {
+    filtered = filtered.filter((a) => a.status === statusFilter)
+  }
+  return filtered
+}
+
+export function ApprovalRequestsList({
+  approvals,
+  isLoading,
+  searchQuery,
+  statusFilter = 'all',
+  onStatusFilterChange,
+}: ApprovalRequestsListProps) {
+  const filteredApprovals = filterApprovals(approvals, searchQuery, statusFilter)
   if (isLoading) {
     return (
       <Card>
@@ -48,7 +87,7 @@ export function ApprovalRequestsList({ approvals, isLoading }: ApprovalRequestsL
     )
   }
 
-  if (!approvals.length) {
+  if (!approvals.length && !searchQuery) {
     return (
       <Card>
         <CardHeader>
@@ -74,15 +113,45 @@ export function ApprovalRequestsList({ approvals, isLoading }: ApprovalRequestsL
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileCheck className="h-5 w-5" />
-          Approval Requests
-        </CardTitle>
-        <CardDescription>Approval requests for this project</CardDescription>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <FileCheck className="h-5 w-5" />
+              Approval Requests
+            </CardTitle>
+            <CardDescription>Approval requests for this project</CardDescription>
+          </div>
+          {approvals.length > 0 && onStatusFilterChange && (
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
+              <div className="flex flex-wrap gap-1">
+                {STATUS_OPTIONS.map((opt) => (
+                  <Button
+                    key={opt.value}
+                    variant={statusFilter === opt.value ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => onStatusFilterChange?.(opt.value)}
+                  >
+                    {opt.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
+        {!filteredApprovals.length && (searchQuery || statusFilter !== 'all') ? (
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-12 text-center">
+            <FileCheck className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-h3 font-medium mb-1">No matching requests</h3>
+            <p className="text-body text-muted-foreground max-w-sm">
+              Try adjusting your search or filter to find what you need.
+            </p>
+          </div>
+        ) : (
         <div className="space-y-4">
-          {approvals.map((approval) => {
+          {filteredApprovals.map((approval) => {
             const config = statusConfig[approval.status] ?? statusConfig.pending
             const StatusIcon = config.icon
             return (
@@ -115,6 +184,7 @@ export function ApprovalRequestsList({ approvals, isLoading }: ApprovalRequestsL
             )
           })}
         </div>
+        )}
       </CardContent>
     </Card>
   )

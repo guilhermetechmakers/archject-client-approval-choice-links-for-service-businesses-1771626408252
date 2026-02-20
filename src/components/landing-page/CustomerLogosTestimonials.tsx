@@ -1,5 +1,6 @@
 import { Quote } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { ScrollReveal } from './ScrollReveal'
 
 const testimonials = [
   {
@@ -40,12 +41,12 @@ export function CustomerLogosTestimonials() {
   return (
     <section className="py-24 bg-card">
       <div className="container">
-        <div className="mx-auto max-w-3xl text-center">
+        <ScrollReveal className="mx-auto max-w-3xl text-center">
           <h2 className="text-h1 font-bold">Trusted by teams</h2>
           <p className="mt-4 text-body text-muted-foreground">
             Architects, designers, and agencies use Archject every day
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Customer logos */}
         <div className="mt-12 flex flex-wrap justify-center gap-8 md:gap-12">

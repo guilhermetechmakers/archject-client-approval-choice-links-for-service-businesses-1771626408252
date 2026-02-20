@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
@@ -7,6 +8,7 @@ import {
   FilesAttachmentsSection,
   ClientContacts,
   CreateApprovalCTA,
+  ProjectSearchBar,
 } from '@/components/project-detail'
 import { useProjectDetail, useArchiveProject } from '@/hooks/use-project-detail'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -15,6 +17,8 @@ export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { data, isLoading, isError, error, refetch } = useProjectDetail(id)
   const archiveMutation = useArchiveProject(id)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
 
   const handleArchive = () => {
     if (!id) return
@@ -77,17 +81,40 @@ export function ProjectDetailPage() {
         <CreateApprovalCTA projectId={project.id} />
       </div>
 
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <ProjectSearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search approvals, files, contacts, timeline..."
+        />
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-2">
         <ApprovalRequestsList
           approvals={approval_requests}
           isLoading={isLoading}
+          searchQuery={searchQuery}
+          statusFilter={statusFilter}
+          onStatusFilterChange={setStatusFilter}
         />
-        <ClientContacts contacts={contacts} isLoading={isLoading} />
+        <ClientContacts
+          contacts={contacts}
+          isLoading={isLoading}
+          searchQuery={searchQuery}
+        />
       </div>
 
-      <TimelineView events={timeline} isLoading={isLoading} />
+      <TimelineView
+        events={timeline}
+        isLoading={isLoading}
+        searchQuery={searchQuery}
+      />
 
-      <FilesAttachmentsSection files={files} isLoading={isLoading} />
+      <FilesAttachmentsSection
+        files={files}
+        isLoading={isLoading}
+        searchQuery={searchQuery}
+      />
     </div>
   )
 }

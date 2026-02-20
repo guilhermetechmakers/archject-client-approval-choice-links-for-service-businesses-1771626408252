@@ -8,6 +8,7 @@ import type { TimelineEvent } from '@/types/project-detail'
 interface TimelineViewProps {
   events: TimelineEvent[]
   isLoading?: boolean
+  searchQuery?: string
 }
 
 const eventTypeLabels: Record<string, string> = {
@@ -39,9 +40,20 @@ function formatRelativeTime(dateStr: string) {
   return 'Just now'
 }
 
-export function TimelineView({ events, isLoading }: TimelineViewProps) {
+function filterEvents(events: TimelineEvent[], searchQuery?: string): TimelineEvent[] {
+  if (!searchQuery?.trim()) return events
+  const q = searchQuery.trim().toLowerCase()
+  return events.filter(
+    (e) =>
+      e.title.toLowerCase().includes(q) ||
+      (e.description?.toLowerCase().includes(q) ?? false)
+  )
+}
+
+export function TimelineView({ events, isLoading, searchQuery }: TimelineViewProps) {
   const [filter, setFilter] = useState<string | null>(null)
-  const eventTypes = [...new Set(events.map((e) => e.type))]
+  const filteredBySearch = filterEvents(events, searchQuery)
+  const eventTypes = [...new Set(filteredBySearch.map((e) => e.type))]
 
   if (isLoading) {
     return (
@@ -67,7 +79,7 @@ export function TimelineView({ events, isLoading }: TimelineViewProps) {
     )
   }
 
-  if (!events.length) {
+  if (!events.length && !searchQuery) {
     return (
       <Card>
         <CardHeader>
@@ -91,8 +103,8 @@ export function TimelineView({ events, isLoading }: TimelineViewProps) {
   }
 
   const filteredEvents = filter
-    ? events.filter((e) => e.type === filter)
-    : events
+    ? filteredBySearch.filter((e) => e.type === filter)
+    : filteredBySearch
 
   return (
     <Card>
@@ -132,6 +144,15 @@ export function TimelineView({ events, isLoading }: TimelineViewProps) {
         </div>
       </CardHeader>
       <CardContent>
+        {!filteredEvents.length && searchQuery ? (
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-12 text-center">
+            <Clock className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-h3 font-medium mb-1">No matching events</h3>
+            <p className="text-body text-muted-foreground max-w-sm">
+              Try adjusting your search to find timeline events.
+            </p>
+          </div>
+        ) : (
         <div className="relative">
           <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
           <div className="space-y-6">
@@ -158,6 +179,7 @@ export function TimelineView({ events, isLoading }: TimelineViewProps) {
             ))}
           </div>
         </div>
+        )}
       </CardContent>
     </Card>
   )

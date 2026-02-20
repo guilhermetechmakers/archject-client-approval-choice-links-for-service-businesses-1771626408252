@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { LandingPage } from '@/pages/LandingPage'
+import { RequestDemoPage } from '@/pages/request-demo'
 import { LoginPage } from '@/pages/login'
 import { SignupPage } from '@/pages/signup'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
@@ -31,6 +32,7 @@ import { AdminUsersPage } from '@/pages/dashboard/admin-users'
 export const router = createBrowserRouter([
   { path: '/', element: <LandingPage /> },
   { path: '/landing-page', element: <LandingPage /> },
+  { path: '/request-demo', element: <RequestDemoPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/signup', element: <SignupPage /> },
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
@@ -50,6 +52,7 @@ export const router = createBrowserRouter([
       { path: 'overview', element: <DashboardOverview /> },
       { path: 'projects', element: <DashboardProjects /> },
       { path: 'projects/:id', element: <ProjectDetailPage /> },
+      { path: 'project-page-/-project-detail/:id', element: <ProjectDetailPage /> },
       { path: 'approvals', element: <DashboardApprovals /> },
       { path: 'approvals/new', element: <CreateApprovalPage /> },
       { path: 'approvals/:id', element: <ApprovalDetailPage /> },
