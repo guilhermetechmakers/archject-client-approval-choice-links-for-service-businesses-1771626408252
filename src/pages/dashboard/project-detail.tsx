@@ -1,74 +1,93 @@
-import { Link } from 'react-router-dom'
-import { Plus, FileCheck, Users } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useParams } from 'react-router-dom'
+import { toast } from 'sonner'
+import {
+  ProjectHeader,
+  ApprovalRequestsList,
+  TimelineView,
+  FilesAttachmentsSection,
+  ClientContacts,
+  CreateApprovalCTA,
+} from '@/components/project-detail'
+import { useProjectDetail, useArchiveProject } from '@/hooks/use-project-detail'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function ProjectDetailPage() {
+  const { id } = useParams<{ id: string }>()
+  const { data, isLoading, isError, error, refetch } = useProjectDetail(id)
+  const archiveMutation = useArchiveProject(id)
+
+  const handleArchive = () => {
+    if (!id) return
+    archiveMutation.mutate(
+      { status: 'archived' },
+      {
+        onSuccess: () => toast.success('Project archived'),
+        onError: () => toast.error('Failed to archive project'),
+      }
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-lg border border-border py-16 text-center animate-fade-in-up">
+        <h2 className="text-h2 font-semibold mb-2">Something went wrong</h2>
+        <p className="text-body text-muted-foreground mb-4 max-w-md">
+          {error instanceof Error ? error.message : 'Failed to load project'}
+        </p>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          Try again
+        </button>
+      </div>
+    )
+  }
+
+  if (isLoading || !data) {
+    return (
+      <div className="space-y-8 animate-fade-in-up">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <Skeleton className="h-4 w-32 mb-2" />
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-40 mt-2" />
+          </div>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Skeleton className="h-64" />
+          <Skeleton className="h-64" />
+        </div>
+        <Skeleton className="h-80" />
+      </div>
+    )
+  }
+
+  const { project, approval_requests, timeline, files, contacts } = data
+
   return (
     <div className="space-y-8 animate-fade-in-up">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Link
-            to="/dashboard/projects"
-            className="text-caption text-muted-foreground hover:text-foreground"
-          >
-            ← Back to projects
-          </Link>
-          <h1 className="text-h1 font-bold mt-2">Kitchen Renovation</h1>
-          <p className="text-body text-muted-foreground">Smith Residence</p>
-        </div>
-        <Button asChild>
-          <Link to="/dashboard/approvals/new">
-            <Plus className="h-5 w-5" />
-            New Approval
-          </Link>
-        </Button>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <ProjectHeader
+          project={project}
+          onArchive={handleArchive}
+          isArchiving={archiveMutation.isPending}
+        />
+        <CreateApprovalCTA projectId={project.id} />
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileCheck className="h-5 w-5" />
-              Approval Requests
-            </CardTitle>
-            <CardDescription>Approval requests for this project</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {['Cabinet Selection', 'Flooring Options', 'Color Palette'].map(
-                (title) => (
-                  <Link
-                    key={title}
-                    to={`/dashboard/approvals/1`}
-                    className="block rounded-lg border border-border p-4 transition-colors hover:bg-accent"
-                  >
-                    <p className="font-medium">{title}</p>
-                    <p className="text-caption text-muted-foreground">
-                      Pending • Due Feb 25
-                    </p>
-                  </Link>
-                )
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Client Contacts
-            </CardTitle>
-            <CardDescription>Contacts for this project</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-body text-muted-foreground">
-              john@smithresidence.com
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <ApprovalRequestsList
+          approvals={approval_requests}
+          isLoading={isLoading}
+        />
+        <ClientContacts contacts={contacts} isLoading={isLoading} />
       </div>
+
+      <TimelineView events={timeline} isLoading={isLoading} />
+
+      <FilesAttachmentsSection files={files} isLoading={isLoading} />
     </div>
   )
 }
