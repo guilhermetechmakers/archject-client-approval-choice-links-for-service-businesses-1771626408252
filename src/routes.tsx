@@ -23,6 +23,7 @@ import { DashboardExports } from '@/pages/dashboard/dashboard-exports'
 import { CreateApprovalPage } from '@/pages/dashboard/create-approval'
 import { ProjectDetailPage } from '@/pages/dashboard/project-detail'
 import { ApprovalDetailPage } from '@/pages/dashboard/approval-detail'
+import ApprovalRequestDetailPage from '@/pages/ApprovalRequestDetail'
 import { ProfilePage } from '@/pages/dashboard/profile'
 import { AdminOverviewPage } from '@/pages/dashboard/admin-overview'
 import { AdminUsersPage } from '@/pages/dashboard/admin-users'
@@ -52,6 +53,7 @@ export const router = createBrowserRouter([
       { path: 'approvals', element: <DashboardApprovals /> },
       { path: 'approvals/new', element: <CreateApprovalPage /> },
       { path: 'approvals/:id', element: <ApprovalDetailPage /> },
+      { path: 'approval-request-detail/:id', element: <ApprovalRequestDetailPage /> },
       { path: 'exports', element: <DashboardExports /> },
       { path: 'settings', element: <DashboardSettings /> },
       { path: 'profile', element: <ProfilePage /> },

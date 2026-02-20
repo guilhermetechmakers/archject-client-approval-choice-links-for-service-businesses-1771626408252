@@ -45,7 +45,7 @@ export function DashboardApprovals() {
                     </div>
                     <div>
                       <Link
-                        to={`/dashboard/approvals/${approval.id}`}
+                        to={`/dashboard/approval-request-detail/${approval.id}`}
                         className="text-h3 font-medium hover:underline"
                       >
                         {approval.title}
@@ -70,7 +70,7 @@ export function DashboardApprovals() {
                       {approval.deadline}
                     </div>
                     <Button variant="outline" size="sm" asChild>
-                      <Link to={`/dashboard/approvals/${approval.id}`}>
+                      <Link to={`/dashboard/approval-request-detail/${approval.id}`}>
                         View
                       </Link>
                     </Button>
