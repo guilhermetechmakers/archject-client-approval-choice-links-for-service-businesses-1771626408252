@@ -28,13 +28,15 @@ export function LandingHeader() {
       role="banner"
     >
       <div className="container flex h-16 min-h-[44px] items-center justify-between">
-        <Link
-          to="/"
-          className="flex items-center gap-2 transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md p-1 -m-1"
-          aria-label="Archject home"
-        >
-          <span className="text-h2 font-bold text-primary">Archject</span>
-        </Link>
+        <h1 className="m-0 flex shrink-0">
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-h2 font-bold text-primary transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md p-1 -m-1"
+            aria-label="Archject home"
+          >
+            Archject
+          </Link>
+        </h1>
 
         {/* Desktop nav */}
         <nav
