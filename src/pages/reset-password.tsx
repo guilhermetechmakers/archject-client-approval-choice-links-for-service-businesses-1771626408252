@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { LandingHeader } from '@/components/layout/landing-header'
 import { PasswordStrengthMeter, SupportLink } from '@/components/password-reset'
 import { getPasswordStrength, meetsMinimumPasswordRequirements } from '@/lib/password-strength'
@@ -109,12 +110,12 @@ export function ResetPasswordPage() {
           return
         }
         await supabase.auth.signOut()
-        setPageState('success')
         toast.success('Password updated successfully')
+        setPageState('success')
       } else {
         await new Promise((r) => setTimeout(r, 1000))
-        setPageState('success')
         toast.success('Password updated successfully')
+        setPageState('success')
       }
     } catch {
       toast.error('Something went wrong. Please try again.')
@@ -125,15 +126,44 @@ export function ResetPasswordPage() {
 
   if (pageState === 'loading') {
     return (
-      <div className="min-h-screen flex flex-col hero-gradient-bg">
+      <div
+        className="min-h-screen flex flex-col hero-gradient-bg"
+        aria-busy="true"
+        aria-live="polite"
+        aria-label="Validating password reset link"
+      >
         <LandingHeader />
-        <main className="flex-1 flex items-center justify-center p-6">
-          <Card className="w-full max-w-md animate-in">
-            <CardContent className="pt-6 flex flex-col items-center justify-center gap-4 py-12">
-              <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
-              <p className="text-body text-muted-foreground">Validating reset link...</p>
+        <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
+          <Card className="w-full max-w-md animate-in shadow-card">
+            <CardHeader className="space-y-1 text-center">
+              <Skeleton className="mx-auto mb-4 h-16 w-16 rounded-full skeleton-shimmer animate-none" />
+              <Skeleton className="mx-auto h-8 w-48 skeleton-shimmer animate-none" />
+              <Skeleton className="mx-auto h-4 w-64 skeleton-shimmer animate-none" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24 skeleton-shimmer animate-none" />
+                <Skeleton className="h-10 w-full rounded-md skeleton-shimmer animate-none" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-32 skeleton-shimmer animate-none" />
+                <Skeleton className="h-10 w-full rounded-md skeleton-shimmer animate-none" />
+              </div>
+              <Skeleton className="h-10 w-full rounded-md skeleton-shimmer animate-none" />
+              <div className="flex items-center justify-center gap-2 pt-2">
+                <Loader2
+                  className="h-4 w-4 animate-spin text-primary"
+                  aria-hidden
+                />
+                <span className="text-caption text-muted-foreground">
+                  Validating reset link...
+                </span>
+              </div>
             </CardContent>
           </Card>
+          <p className="sr-only" role="status">
+            Validating your password reset link. Please wait.
+          </p>
         </main>
       </div>
     )
@@ -143,8 +173,8 @@ export function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex flex-col hero-gradient-bg">
         <LandingHeader />
-        <main className="flex-1 flex items-center justify-center p-6">
-          <Card className="w-full max-w-md animate-in shadow-card">
+        <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
+          <Card className="w-full max-w-md animate-in shadow-card hover:shadow-popover transition-shadow duration-300">
             <CardHeader className="space-y-1 text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
                 <XCircle className="h-10 w-10 text-destructive" aria-hidden />
@@ -155,10 +185,19 @@ export function ResetPasswordPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button asChild className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
+              <Button
+                asChild
+                className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-popover"
+                aria-label="Request a new password reset link"
+              >
                 <Link to="/forgot-password">Request new reset link</Link>
               </Button>
-              <Button variant="outline" asChild className="w-full">
+              <Button
+                variant="outline"
+                asChild
+                className="w-full"
+                aria-label="Return to login page"
+              >
                 <Link to="/login">Back to login</Link>
               </Button>
               <SupportLink variant="reset" />
@@ -173,8 +212,8 @@ export function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex flex-col hero-gradient-bg">
         <LandingHeader />
-        <main className="flex-1 flex items-center justify-center p-6">
-          <Card className="w-full max-w-md animate-in shadow-card border-success/30">
+        <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
+          <Card className="w-full max-w-md animate-in shadow-card hover:shadow-popover transition-shadow duration-300 border-success/30">
             <CardHeader className="space-y-1 text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success/10">
                 <CheckCircle className="h-10 w-10 text-success" aria-hidden />
@@ -185,7 +224,11 @@ export function ResetPasswordPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button asChild className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
+              <Button
+                asChild
+                className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-popover"
+                aria-label="Return to login page"
+              >
                 <Link to="/login">Back to login</Link>
               </Button>
               <SupportLink variant="reset" />
@@ -199,8 +242,8 @@ export function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex flex-col hero-gradient-bg">
       <LandingHeader />
-      <main className="flex-1 flex items-center justify-center p-6">
-        <Card className="w-full max-w-md animate-in shadow-card hover:shadow-popover transition-all duration-300">
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
+        <Card className="w-full max-w-md animate-in shadow-card hover:shadow-popover transition-shadow duration-300">
           <CardHeader className="space-y-1 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
               <KeyRound className="h-10 w-10 text-primary" aria-hidden />
@@ -217,6 +260,7 @@ export function ResetPasswordPage() {
                 'space-y-4',
                 (errors.password || errors.confirmPassword) && 'animate-shake'
               )}
+              aria-label="Set new password form"
             >
               <div className="space-y-2">
                 <Label htmlFor="password">New password</Label>
@@ -231,6 +275,7 @@ export function ResetPasswordPage() {
                   aria-describedby={
                     errors.password ? 'password-error' : password ? 'password-strength' : undefined
                   }
+                  aria-label="New password"
                 />
                 {password && (
                   <PasswordStrengthMeter result={strengthResult} id="password-strength" />
@@ -252,6 +297,7 @@ export function ResetPasswordPage() {
                   autoComplete="new-password"
                   aria-invalid={!!errors.confirmPassword}
                   aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
+                  aria-label="Confirm new password"
                 />
                 {errors.confirmPassword && (
                   <p id="confirmPassword-error" className="text-caption text-destructive" role="alert">
@@ -261,8 +307,10 @@ export function ResetPasswordPage() {
               </div>
               <Button
                 type="submit"
-                className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+                className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-popover"
                 disabled={isSubmitting}
+                aria-label={isSubmitting ? 'Updating password' : 'Update password'}
+                aria-busy={isSubmitting}
               >
                 {isSubmitting ? (
                   <>
@@ -277,6 +325,7 @@ export function ResetPasswordPage() {
                 <Link
                   to="/login"
                   className="text-caption text-primary hover:underline"
+                  aria-label="Return to login page"
                 >
                   Back to login
                 </Link>

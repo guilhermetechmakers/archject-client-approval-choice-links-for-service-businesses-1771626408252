@@ -81,6 +81,17 @@
   .skip-link {
     @apply sr-only;
   }
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgb(var(--muted)) 0%,
+      rgb(var(--accent)) 50%,
+      rgb(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
   .skip-link:focus {
     position: fixed;
     top: 1rem;
