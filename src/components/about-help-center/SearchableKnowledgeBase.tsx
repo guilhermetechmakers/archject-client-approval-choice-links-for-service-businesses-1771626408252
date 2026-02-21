@@ -64,47 +64,82 @@ const categoryIcons = {
   template: LayoutTemplate,
 }
 
-export function SearchableKnowledgeBase() {
+export interface SearchableKnowledgeBaseProps {
+  /** Articles to display. When empty, shows empty state. When undefined, uses default articles. */
+  articles?: KnowledgeArticle[]
+}
+
+export function SearchableKnowledgeBase({ articles: articlesProp }: SearchableKnowledgeBaseProps) {
   const [search, setSearch] = useState('')
+  const articles = articlesProp ?? defaultArticles
+  const isEmpty = articles.length === 0
 
   const filteredArticles = useMemo(() => {
-    if (!search.trim()) return defaultArticles
+    if (!search.trim()) return articles
     const q = search.toLowerCase()
-    return defaultArticles.filter(
+    return articles.filter(
       (a) =>
         a.title.toLowerCase().includes(q) ||
         a.description.toLowerCase().includes(q) ||
         a.category.toLowerCase().includes(q)
     )
-  }, [search])
+  }, [search, articles])
+
+  const showEmptyState = isEmpty
+  const showNoResultsState = !isEmpty && filteredArticles.length === 0
 
   return (
-    <Card className="overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+    <Card className="overflow-hidden rounded-xl shadow-card hover:shadow-lg transition-shadow duration-300 border-border">
       <CardHeader className="border-b border-border bg-muted/30">
-        <CardTitle className="flex items-center gap-2">
-          <Search className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-foreground">
+          <Search className="h-5 w-5 text-primary" aria-hidden />
           Knowledge Base
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-muted-foreground">
           Articles, onboarding guides, and templates to help you get the most out of Archject
         </CardDescription>
-        <div className="relative mt-4">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search articles, guides, templates..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-            aria-label="Search knowledge base"
-          />
-        </div>
+        {!isEmpty && (
+          <div className="relative mt-4">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+            <Input
+              placeholder="Search articles, guides, templates..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 bg-background border-input"
+              aria-label="Search knowledge base"
+            />
+          </div>
+        )}
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y divide-border">
-          {filteredArticles.length === 0 ? (
+          {showEmptyState ? (
+            <div
+              className="flex flex-col items-center justify-center py-16 px-6 text-center"
+              role="status"
+              aria-live="polite"
+            >
+              <div className="rounded-full bg-muted p-4 mb-4">
+                <BookOpen className="h-12 w-12 text-muted-foreground" aria-hidden />
+              </div>
+              <h4 className="text-h3 font-semibold text-foreground mb-2">No articles yet</h4>
+              <p className="text-body text-muted-foreground mb-6 max-w-sm">
+                We&apos;re building our knowledge base. Check back soon or contact support for help.
+              </p>
+              <Button
+                asChild
+                variant="default"
+                size="lg"
+                className="min-h-[44px] px-6"
+                aria-label="Contact support for help"
+              >
+                <a href="#contact-support">Contact support</a>
+              </Button>
+            </div>
+          ) : showNoResultsState ? (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
               <FileText className="h-12 w-12 text-muted-foreground mb-4" aria-hidden />
-              <h4 className="text-h3 font-semibold mb-2">No results found</h4>
+              <h4 className="text-h3 font-semibold mb-2 text-foreground">No results found</h4>
               <p className="text-body text-muted-foreground mb-6 max-w-sm">
                 Try a different search term or browse all articles above.
               </p>
