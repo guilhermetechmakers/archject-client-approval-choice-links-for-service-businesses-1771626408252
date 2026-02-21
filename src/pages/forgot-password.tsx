@@ -3,11 +3,16 @@ import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { Mail, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LandingHeader } from '@/components/layout/landing-header'
+import { SupportLink } from '@/components/password-reset'
+import { cn } from '@/lib/utils'
+import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
@@ -26,35 +31,52 @@ export function ForgotPasswordPage() {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = async (_data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     setIsLoading(true)
     try {
-      // TODO: API call
-      await new Promise((r) => setTimeout(r, 1000))
-      setSubmitted(true)
+      if (supabase) {
+        const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        })
+        if (error) {
+          toast.error(error.message)
+          return
+        }
+        setSubmitted(true)
+        toast.success('Check your email for the reset link')
+      } else {
+        await new Promise((r) => setTimeout(r, 1000))
+        setSubmitted(true)
+        toast.success('Check your email for the reset link')
+      }
+    } catch {
+      toast.error('Something went wrong. Please try again.')
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col hero-gradient-bg">
       <LandingHeader />
       <main className="flex-1 flex items-center justify-center p-6">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md animate-in shadow-card hover:shadow-popover transition-all duration-300">
           <CardHeader className="space-y-1 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+              <Mail className="h-10 w-10 text-primary" aria-hidden />
+            </div>
             <CardTitle className="text-h1">Reset password</CardTitle>
             <CardDescription>
               Enter your email and we&apos;ll send you a reset link
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             {submitted ? (
-              <div className="space-y-4 text-center">
-                <div className="rounded-lg bg-success/10 p-4 text-success">
-                  Check your email for a reset link.
+              <div className="space-y-4 text-center animate-in">
+                <div className="rounded-lg border border-success/30 bg-success/5 p-4 text-success">
+                  Check your email for a reset link. The link will expire in 1 hour.
                 </div>
-                <Button asChild className="w-full">
+                <Button asChild className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
                   <Link to="/login">Back to login</Link>
                 </Button>
                 <p className="text-caption text-muted-foreground">
@@ -67,9 +89,13 @@ export function ForgotPasswordPage() {
                     Try again
                   </button>
                 </p>
+                <SupportLink variant="reset" />
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className={cn('space-y-4', errors.email && 'animate-shake')}
+              >
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -77,7 +103,8 @@ export function ForgotPasswordPage() {
                     type="email"
                     placeholder="you@company.com"
                     {...register('email')}
-                    className={errors.email ? 'border-destructive' : ''}
+                    className={errors.email ? 'border-destructive focus-visible:ring-destructive/20' : ''}
+                    autoComplete="email"
                   />
                   {errors.email && (
                     <p className="text-caption text-destructive">
@@ -91,11 +118,13 @@ export function ForgotPasswordPage() {
                 <p className="text-center">
                   <Link
                     to="/login"
-                    className="text-caption text-primary hover:underline"
+                    className="inline-flex items-center gap-1.5 text-caption text-primary hover:underline"
                   >
+                    <ArrowLeft className="h-4 w-4" aria-hidden />
                     Back to login
                   </Link>
                 </p>
+                <SupportLink variant="reset" />
               </form>
             )}
           </CardContent>

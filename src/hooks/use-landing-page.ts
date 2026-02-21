@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import type { LandingPageConfig } from '@/types/landing-page'
 
 const DEFAULT_CONFIG: LandingPageConfig = {
@@ -10,6 +11,10 @@ const DEFAULT_CONFIG: LandingPageConfig = {
 
 async function fetchLandingPageConfig(): Promise<LandingPageConfig> {
   try {
+    if (isSupabaseConfigured() && supabase) {
+      const { data, error } = await supabase.functions.invoke<LandingPageConfig>('landing-page')
+      if (!error && data) return data
+    }
     const data = await apiGet<LandingPageConfig>('/landing-page')
     return data ?? DEFAULT_CONFIG
   } catch {
