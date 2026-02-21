@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 
 const mockApprovals = [
   { id: '1', title: 'Cabinet Selection', project: 'Kitchen Renovation', status: 'pending', deadline: '2025-02-25' },
@@ -27,23 +28,23 @@ export function DashboardApprovals() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-h1 font-bold">Approval Requests</h1>
-          <p className="text-body text-muted-foreground mt-1">
+          <h1 className="text-h1 font-bold text-foreground">Approval Requests</h1>
+          <h2 className="text-body text-muted-foreground mt-1 font-normal">
             Create and manage client approval links
-          </p>
+          </h2>
         </div>
         <Button asChild>
           <Link to="/dashboard/approvals/new">
-            <Plus className="h-5 w-5" />
+            <Plus className="h-5 w-5" aria-hidden />
             New Approval
           </Link>
         </Button>
-      </div>
+      </header>
 
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" aria-hidden />
         <Input
           placeholder="Search approvals..."
           className="pl-9 transition-all duration-200 focus:border-primary"
@@ -62,56 +63,76 @@ export function DashboardApprovals() {
         <TabsContent value="all" className="space-y-4">
           <div className="space-y-4">
             {filteredApprovals.length === 0 ? (
-              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-16 text-center">
-                <FileCheck className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-h3 font-medium mb-1">No matching approvals</h3>
-                <p className="text-body text-muted-foreground max-w-sm">
-                  Try adjusting your search to find approval requests.
+              <div
+                className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-16 px-4 text-center"
+                role="status"
+                aria-live="polite"
+                aria-label="No matching approvals. Try adjusting your search or create a new approval."
+              >
+                <div className="rounded-full bg-muted p-4 mb-4">
+                  <FileCheck className="h-10 w-10 text-muted-foreground" aria-hidden />
+                </div>
+                <h3 className="text-h3 font-medium text-foreground mb-1">No matching approvals</h3>
+                <p className="text-body text-muted-foreground max-w-sm mb-6">
+                  Try adjusting your search to find approval requests, or create your first approval link.
                 </p>
+                <Button asChild className="transition-transform hover:scale-[1.02] active:scale-[0.98]">
+                  <Link to="/dashboard/approvals/new">
+                    <Plus className="h-5 w-5" aria-hidden />
+                    Create New Approval
+                  </Link>
+                </Button>
               </div>
             ) : (
-            filteredApprovals.map((approval) => (
-              <Card key={approval.id} className="transition-all duration-300 hover:shadow-popover">
-                <CardContent className="flex items-center justify-between p-6">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                      <FileCheck className="h-6 w-6 text-primary" />
+              filteredApprovals.map((approval) => (
+                <Card
+                  key={approval.id}
+                  className={cn(
+                    'rounded-2xl transition-all duration-300',
+                    'hover:shadow-popover hover:-translate-y-0.5'
+                  )}
+                >
+                  <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                        <FileCheck className="h-5 w-5 text-primary" aria-hidden />
+                      </div>
+                      <div className="min-w-0">
+                        <Link
+                          to={`/dashboard/approval-request-detail/${approval.id}`}
+                          className="text-h3 font-medium text-foreground hover:underline"
+                        >
+                          {approval.title}
+                        </Link>
+                        <p className="text-caption text-muted-foreground">
+                          {approval.project}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <Link
-                        to={`/dashboard/approval-request-detail/${approval.id}`}
-                        className="text-h3 font-medium hover:underline"
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                      <span
+                        className={cn(
+                          'rounded-full px-2 py-1 text-caption font-medium',
+                          approval.status === 'approved'
+                            ? 'bg-success/10 text-success'
+                            : 'bg-warning/10 text-warning'
+                        )}
                       >
-                        {approval.title}
-                      </Link>
-                      <p className="text-caption text-muted-foreground">
-                        {approval.project}
-                      </p>
+                        {approval.status}
+                      </span>
+                      <div className="flex items-center gap-1 text-caption text-muted-foreground">
+                        <Clock className="h-5 w-5 shrink-0" aria-hidden />
+                        {approval.deadline}
+                      </div>
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to={`/dashboard/approval-request-detail/${approval.id}`}>
+                          View
+                        </Link>
+                      </Button>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span
-                      className={`rounded-full px-2 py-1 text-caption ${
-                        approval.status === 'approved'
-                          ? 'bg-success/10 text-success'
-                          : 'bg-warning/10 text-warning'
-                      }`}
-                    >
-                      {approval.status}
-                    </span>
-                    <div className="flex items-center gap-1 text-caption text-muted-foreground">
-                      <Clock className="h-4 w-4" />
-                      {approval.deadline}
-                    </div>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link to={`/dashboard/approval-request-detail/${approval.id}`}>
-                        View
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
+                  </CardContent>
+                </Card>
+              ))
             )}
           </div>
         </TabsContent>
