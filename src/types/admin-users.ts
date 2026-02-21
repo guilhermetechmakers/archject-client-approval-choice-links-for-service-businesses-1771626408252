@@ -27,3 +27,8 @@ export interface ListUsersParams {
   page?: number
   pageSize?: number
 }
+
+export interface BulkUpdateRoleRequest {
+  userIds: string[]
+  role: 'Admin' | 'Member' | 'Viewer'
+}

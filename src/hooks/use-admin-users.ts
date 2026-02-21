@@ -4,8 +4,14 @@ import {
   fetchAdminUsers,
   updateUserRole,
   inviteUser,
+  bulkUpdateUserRoles,
 } from '@/services/admin-usersService'
-import type { ListUsersParams, UpdateRoleRequest, InviteUserRequest } from '@/types/admin-users'
+import type {
+  ListUsersParams,
+  UpdateRoleRequest,
+  InviteUserRequest,
+  BulkUpdateRoleRequest,
+} from '@/types/admin-users'
 
 const QUERY_KEY = ['admin-users']
 
@@ -42,6 +48,23 @@ export function useInviteUser() {
     },
     onError: (error: Error) => {
       toast.error(error.message ?? 'Failed to invite user')
+    },
+  })
+}
+
+export function useBulkUpdateUserRoles() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (request: BulkUpdateRoleRequest) => bulkUpdateUserRoles(request),
+    onSuccess: (_, variables) => {
+      toast.success(
+        `Updated ${variables.userIds.length} user${variables.userIds.length > 1 ? 's' : ''} to ${variables.role}`
+      )
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY })
+    },
+    onError: (error: Error) => {
+      toast.error(error.message ?? 'Failed to update roles')
     },
   })
 }

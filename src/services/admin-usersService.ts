@@ -4,6 +4,7 @@ import type {
   UpdateRoleRequest,
   InviteUserRequest,
   ListUsersParams,
+  BulkUpdateRoleRequest,
 } from '@/types/admin-users'
 
 const MOCK_USERS: AdminUsersResponse = {
@@ -100,6 +101,30 @@ export async function inviteUser(request: InviteUserRequest): Promise<void> {
       })
       if (!error) return
       throw new Error(error.message ?? 'Failed to invite user')
+    }
+  }
+  throw new Error('Not authenticated')
+}
+
+/**
+ * Bulk updates user roles via Supabase Edge Function.
+ */
+export async function bulkUpdateUserRoles(
+  request: BulkUpdateRoleRequest
+): Promise<void> {
+  if (supabase) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session?.access_token) {
+      const { error } = await supabase.functions.invoke('admin-users', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: { action: 'bulk_update_role', ...request },
+      })
+      if (!error) return
+      throw new Error(error.message ?? 'Failed to update roles')
     }
   }
   throw new Error('Not authenticated')

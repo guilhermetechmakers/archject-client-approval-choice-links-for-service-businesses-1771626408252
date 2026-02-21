@@ -205,6 +205,51 @@ Deno.serve(async (req) => {
       )
     }
 
+    if (action === 'bulk_update_role' && req.method === 'POST') {
+      const userIds = body.userIds as string[] | undefined
+      const role = body.role as string | undefined
+      if (!userIds || !Array.isArray(userIds) || userIds.length === 0 || !role) {
+        return new Response(
+          JSON.stringify({ error: 'userIds (array) and role are required' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      const validRoles = ['Admin', 'Member', 'Viewer']
+      if (!validRoles.includes(role)) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid role' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      for (const userId of userIds) {
+        const { error: updateError } = await supabaseAdmin
+          .from('profiles')
+          .update({ role, updated_at: new Date().toISOString() })
+          .eq('id', userId)
+
+        if (updateError) {
+          return new Response(
+            JSON.stringify({ error: updateError.message }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+
+        await supabaseAdmin.from('admin_audit_logs').insert({
+          user_id: user.id,
+          action: 'user_role_updated',
+          resource_type: 'user',
+          resource_id: userId,
+          details: { role },
+        })
+      }
+
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
     return new Response(
       JSON.stringify({ error: 'Invalid action' }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
