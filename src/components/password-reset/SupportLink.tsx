@@ -9,6 +9,10 @@ export interface SupportLinkProps {
 
 export function SupportLink({ className, variant = 'default' }: SupportLinkProps) {
   const isReset = variant === 'reset'
+  const linkText = isReset ? 'Contact support if reset fails' : 'Contact support'
+  const ariaLabel = isReset
+    ? 'Contact support for help if password reset fails'
+    : 'Contact support for help'
 
   return (
     <p
@@ -20,10 +24,11 @@ export function SupportLink({ className, variant = 'default' }: SupportLinkProps
       Need help?{' '}
       <Link
         to="/about/help-center"
-        className="inline-flex items-center gap-1.5 text-primary transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+        aria-label={ariaLabel}
+        className="inline-flex items-center gap-1.5 text-primary ring-offset-background transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm underline-offset-4"
       >
-        <HelpCircle className="h-4 w-4" aria-hidden />
-        {isReset ? 'Contact support if reset fails' : 'Contact support'}
+        <HelpCircle className="h-4 w-4 shrink-0" aria-hidden />
+        {linkText}
       </Link>
     </p>
   )
