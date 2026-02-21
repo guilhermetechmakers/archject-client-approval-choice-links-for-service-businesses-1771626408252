@@ -1,12 +1,20 @@
 import { Mail, Phone, Users } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { ClientContact } from '@/types/project-detail'
+
+const ICON_SIZE = {
+  header: 'h-5 w-5',
+  empty: 'h-10 w-10',
+  inline: 'h-4 w-4',
+} as const
 
 interface ClientContactsProps {
   contacts: ClientContact[]
   isLoading?: boolean
   searchQuery?: string
+  onAddContact?: () => void
 }
 
 function formatLastResponse(dateStr?: string) {
@@ -32,19 +40,33 @@ function filterContacts(contacts: ClientContact[], searchQuery?: string): Client
   )
 }
 
-export function ClientContacts({ contacts, isLoading, searchQuery }: ClientContactsProps) {
+export function ClientContacts({
+  contacts,
+  isLoading,
+  searchQuery,
+  onAddContact,
+}: ClientContactsProps) {
   const filteredContacts = filterContacts(contacts, searchQuery)
+
   if (isLoading) {
     return (
-      <Card>
+      <Card
+        className="rounded-lg border-border bg-card shadow-card"
+        role="status"
+        aria-label="Loading client contacts"
+      >
         <CardHeader>
-          <div className="h-6 w-32 animate-pulse rounded bg-muted" />
-          <div className="h-4 w-48 animate-pulse rounded bg-muted mt-2" />
+          <div className="h-6 w-32 animate-pulse rounded-md bg-muted" aria-hidden />
+          <div className="h-4 w-48 animate-pulse rounded-md bg-muted mt-2" aria-hidden />
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {[1, 2].map((i) => (
-              <div key={i} className="h-16 animate-pulse rounded-lg bg-muted" />
+              <div
+                key={i}
+                className="h-16 animate-pulse rounded-lg bg-muted"
+                aria-hidden
+              />
             ))}
           </div>
         </CardContent>
@@ -54,21 +76,43 @@ export function ClientContacts({ contacts, isLoading, searchQuery }: ClientConta
 
   if (!contacts.length && !searchQuery) {
     return (
-      <Card>
+      <Card
+        className="rounded-lg border-border bg-card shadow-card"
+        role="region"
+        aria-labelledby="client-contacts-heading"
+      >
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
+          <CardTitle
+            id="client-contacts-heading"
+            className="flex items-center gap-2"
+          >
+            <Users className={ICON_SIZE.header} aria-hidden />
             Client Contacts
           </CardTitle>
           <CardDescription>Contacts for this project</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-12 text-center">
-            <Users className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-h3 font-medium mb-1">No contacts</h3>
-            <p className="text-body text-muted-foreground max-w-sm">
+          <div
+            className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-12 px-4 text-center"
+            role="status"
+            aria-live="polite"
+            aria-label="No contacts. Add client contacts to send approval requests and track responses."
+          >
+            <div className="rounded-full bg-muted p-4 mb-4">
+              <Users className={cn(ICON_SIZE.empty, 'text-muted-foreground')} aria-hidden />
+            </div>
+            <h3 className="text-h3 font-medium text-foreground mb-1">No contacts</h3>
+            <p className="text-body text-muted-foreground mb-6 max-w-sm">
               Add client contacts to send approval requests and track responses.
             </p>
+            <Button
+              variant="default"
+              onClick={() => onAddContact?.()}
+              className="rounded-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              aria-label="Add your first client contact"
+            >
+              Add contact
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -76,54 +120,71 @@ export function ClientContacts({ contacts, isLoading, searchQuery }: ClientConta
   }
 
   return (
-    <Card>
+    <Card
+      className="rounded-lg border-border bg-card shadow-card"
+      role="region"
+      aria-labelledby="client-contacts-heading"
+    >
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Users className="h-5 w-5" />
+        <CardTitle
+          id="client-contacts-heading"
+          className="flex items-center gap-2"
+        >
+          <Users className={ICON_SIZE.header} aria-hidden />
           Client Contacts
         </CardTitle>
         <CardDescription>Contacts for this project</CardDescription>
       </CardHeader>
       <CardContent>
         {!filteredContacts.length && searchQuery ? (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-12 text-center">
-            <Users className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-h3 font-medium mb-1">No matching contacts</h3>
+          <div
+            className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-12 px-4 text-center"
+            role="status"
+            aria-live="polite"
+            aria-label="No matching contacts. Try adjusting your search."
+          >
+            <div className="rounded-full bg-muted p-4 mb-4">
+              <Users className={cn(ICON_SIZE.empty, 'text-muted-foreground')} aria-hidden />
+            </div>
+            <h3 className="text-h3 font-medium text-foreground mb-1">No matching contacts</h3>
             <p className="text-body text-muted-foreground max-w-sm">
               Try adjusting your search to find contacts.
             </p>
           </div>
         ) : (
-        <div className="space-y-4">
-          {filteredContacts.map((contact) => (
-            <div
-              key={contact.id}
-              className="rounded-lg border border-border p-4 transition-all duration-200 hover:shadow-popover"
-            >
-              <p className="font-medium">{contact.name}</p>
-              <div className="mt-2 flex flex-col gap-1 text-caption text-muted-foreground">
-                <span className="flex items-center gap-2">
-                  <Mail className="h-3.5 w-3.5 shrink-0" />
-                  {contact.email}
-                </span>
-                {contact.phone && (
-                  <span className="flex items-center gap-2">
-                    <Phone className="h-3.5 w-3.5 shrink-0" />
-                    {contact.phone}
-                  </span>
-                )}
-                <span
-                  className={cn(
-                    'mt-1',
-                    contact.last_response_at ? 'text-foreground' : 'text-muted-foreground'
-                  )}
+          <ul className="space-y-4 list-none p-0 m-0" role="list">
+            {filteredContacts.map((contact) => (
+              <li key={contact.id}>
+                <div
+                  className="rounded-lg border border-border bg-card p-4 shadow-card transition-all duration-200 hover:shadow-popover hover:-translate-y-0.5"
+                  role="article"
+                  aria-label={`Contact: ${contact.name}, ${contact.email}${contact.phone ? `, ${contact.phone}` : ''}`}
                 >
-                  Last response: {formatLastResponse(contact.last_response_at)}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+                  <p className="font-medium">{contact.name}</p>
+                  <div className="mt-2 flex flex-col gap-1 text-caption text-muted-foreground">
+                    <span className="flex items-center gap-2">
+                      <Mail className={cn(ICON_SIZE.inline, 'shrink-0')} aria-hidden />
+                      {contact.email}
+                    </span>
+                    {contact.phone && (
+                      <span className="flex items-center gap-2">
+                        <Phone className={cn(ICON_SIZE.inline, 'shrink-0')} aria-hidden />
+                        {contact.phone}
+                      </span>
+                    )}
+                    <span
+                      className={cn(
+                        'mt-1',
+                        contact.last_response_at ? 'text-foreground' : 'text-muted-foreground'
+                      )}
+                    >
+                      Last response: {formatLastResponse(contact.last_response_at)}
+                    </span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
       </CardContent>
     </Card>

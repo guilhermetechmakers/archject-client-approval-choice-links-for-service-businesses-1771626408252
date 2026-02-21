@@ -181,6 +181,7 @@ export function ProjectDetailPage() {
             contacts={contacts}
             isLoading={isLoading}
             searchQuery={searchQuery}
+            onAddContact={() => toast.info('Add contact dialog coming soon')}
           />
         </div>
       </section>
