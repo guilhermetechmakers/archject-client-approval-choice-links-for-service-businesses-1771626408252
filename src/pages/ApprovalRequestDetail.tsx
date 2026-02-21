@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -184,6 +184,29 @@ export default function ApprovalRequestDetailPage() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
+      <nav
+        className="flex items-center gap-2 text-caption text-muted-foreground"
+        aria-label="Breadcrumb"
+      >
+        <Link
+          to="/dashboard/overview"
+          className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+        >
+          Dashboard
+        </Link>
+        <ChevronRight className="h-4 w-4 shrink-0" aria-hidden />
+        <Link
+          to="/dashboard/approvals"
+          className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+        >
+          Approvals
+        </Link>
+        <ChevronRight className="h-4 w-4 shrink-0" aria-hidden />
+        <span className="text-foreground font-medium truncate max-w-[200px] sm:max-w-none">
+          {request.title}
+        </span>
+      </nav>
+
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <Link

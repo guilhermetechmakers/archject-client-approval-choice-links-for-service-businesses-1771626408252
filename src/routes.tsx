@@ -35,6 +35,10 @@ import PreferencesPage from '@/pages/Settings/Preferences'
 export const router = createBrowserRouter([
   { path: '/', element: <LandingPage /> },
   { path: '/landing-page', element: <LandingPage /> },
+  {
+    path: '/approval-request-detail',
+    element: <Navigate to="/dashboard/approvals" replace />,
+  },
   { path: '/request-demo', element: <RequestDemoPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/signup', element: <SignupPage /> },
@@ -69,6 +73,7 @@ export const router = createBrowserRouter([
       { path: 'settings-/-preferences', element: <PreferencesPage /> },
       { path: 'profile', element: <ProfilePage /> },
       { path: 'orders', element: <OrdersPage /> },
+      { path: 'transactions', element: <OrdersPage /> },
       { path: 'admin', element: <AdminOverviewPage /> },
       { path: 'admin/users', element: <AdminUsersPage /> },
     ],

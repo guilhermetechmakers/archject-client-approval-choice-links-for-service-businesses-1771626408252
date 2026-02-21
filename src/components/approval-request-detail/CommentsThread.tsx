@@ -201,7 +201,13 @@ export function CommentsThread({
   }
 
   return (
-    <Card className={cn('transition-all duration-300 hover:shadow-popover', className)}>
+    <Card
+      className={cn(
+        'transition-all duration-300 hover:shadow-popover hover:-translate-y-0.5',
+        'border-l-4 border-l-primary/30',
+        className
+      )}
+    >
       <CardHeader>
         <CardTitle>Comments</CardTitle>
         <CardDescription>Inline replies, resolve and flag actions</CardDescription>
@@ -228,8 +234,8 @@ export function CommentsThread({
 
         {topLevelComments.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-              <MessageSquare className="h-8 w-8 text-muted-foreground" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary/10 to-primary/5">
+              <MessageSquare className="h-8 w-8 text-primary/60" />
             </div>
             <h3 className="text-h3 font-medium mt-4">No comments yet</h3>
             <p className="text-body text-muted-foreground mt-2 max-w-sm">

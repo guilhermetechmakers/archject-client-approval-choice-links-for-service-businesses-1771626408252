@@ -42,7 +42,13 @@ export function AdminActions({
   className,
 }: AdminActionsProps) {
   return (
-    <Card className={cn('transition-all duration-300 hover:shadow-popover', className)}>
+    <Card
+      className={cn(
+        'transition-all duration-300 hover:shadow-popover hover:-translate-y-0.5',
+        'border-l-4 border-l-primary/30',
+        className
+      )}
+    >
       <CardHeader>
         <CardTitle>Admin Actions</CardTitle>
         <CardDescription>
@@ -56,6 +62,7 @@ export function AdminActions({
               variant="outline"
               onClick={onSendReminder}
               disabled={isSendingReminder || isRevoked}
+              className="transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
             >
               <Mail className="h-4 w-4" />
               {isSendingReminder ? 'Sending...' : 'Send Reminder'}
@@ -66,7 +73,10 @@ export function AdminActions({
               variant="outline"
               onClick={onRevokeLink}
               disabled={isRevoking || isRevoked}
-              className={isRevoked ? 'opacity-50' : ''}
+              className={cn(
+                'transition-all duration-200 hover:scale-[1.02] hover:shadow-md',
+                isRevoked && 'opacity-50'
+              )}
             >
               <Link2Off className="h-4 w-4" />
               {isRevoked ? 'Revoked' : isRevoking ? 'Revoking...' : 'Revoke Link'}
@@ -77,6 +87,7 @@ export function AdminActions({
               variant="outline"
               onClick={onDuplicateRequest}
               disabled={isDuplicating}
+              className="transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
             >
               <Copy className="h-4 w-4" />
               {isDuplicating ? 'Duplicating...' : 'Duplicate Request'}
@@ -85,7 +96,10 @@ export function AdminActions({
           {(onConvertToChangeOrder || onConvertToInvoice) && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
+                <Button
+                  variant="outline"
+                  className="transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
+                >
                   Convert
                   <ChevronDown className="h-4 w-4" />
                 </Button>

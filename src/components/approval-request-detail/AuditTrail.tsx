@@ -31,15 +31,21 @@ export function AuditTrail({
 }: AuditTrailProps) {
   if (entries.length === 0) {
     return (
-      <Card className={cn('transition-all duration-300 hover:shadow-popover', className)}>
+      <Card
+        className={cn(
+          'transition-all duration-300 hover:shadow-popover hover:-translate-y-0.5',
+          'border-l-4 border-l-primary/30',
+          className
+        )}
+      >
         <CardHeader>
           <CardTitle>Audit Trail</CardTitle>
           <CardDescription>Chronological, exportable log with IP, user-agent, and timestamp</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-              <History className="h-8 w-8 text-muted-foreground" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary/10 to-primary/5">
+              <History className="h-8 w-8 text-primary/60" />
             </div>
             <h3 className="text-h3 font-medium mt-4">No activity yet</h3>
             <p className="text-body text-muted-foreground mt-2 max-w-sm">
@@ -52,11 +58,17 @@ export function AuditTrail({
   }
 
   return (
-    <Card className={cn('transition-all duration-300 hover:shadow-popover', className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+    <Card
+      className={cn(
+        'transition-all duration-300 hover:shadow-popover hover:-translate-y-0.5',
+        'border-l-4 border-l-primary/30',
+        className
+      )}
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sticky top-0 bg-card z-10">
         <div>
           <CardTitle>Audit Trail</CardTitle>
-          <CardDescription>Chronological log with IP, user-agent, and timestamp</CardDescription>
+          <CardDescription>Chronological, exportable log with IP, user-agent, and timestamp</CardDescription>
         </div>
         {onExport && (
           <Button
@@ -64,6 +76,7 @@ export function AuditTrail({
             size="sm"
             onClick={onExport}
             disabled={isExporting}
+            className="transition-all duration-200 hover:scale-[1.02] hover:shadow-md shrink-0"
           >
             {isExporting ? 'Exporting...' : 'Export'}
           </Button>

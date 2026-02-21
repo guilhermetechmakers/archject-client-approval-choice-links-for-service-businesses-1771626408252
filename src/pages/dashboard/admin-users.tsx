@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronRight, AlertCircle, Shield } from 'lucide-react'
+import { ChevronRight, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ErrorState } from '@/components/loading-success-pages'
 import { useDebounce } from '@/hooks/use-debounce'
 import {
   useAdminUsers,
@@ -50,30 +51,26 @@ export function AdminUsersPage() {
   if (isError) {
     return (
       <div className="space-y-6 animate-fade-in-up">
-        <nav className="flex items-center gap-2 text-caption text-muted-foreground">
+        <nav
+          className="flex items-center gap-2 text-caption text-muted-foreground"
+          aria-label="Breadcrumb"
+        >
           <Link to="/dashboard/overview" className="hover:text-foreground transition-colors">
             Dashboard
           </Link>
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4" aria-hidden />
           <Link to="/dashboard/admin" className="hover:text-foreground transition-colors">
             Admin
           </Link>
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4" aria-hidden />
           <span className="text-foreground font-medium">Users</span>
         </nav>
-        <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-12 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-            <AlertCircle className="h-8 w-8 text-destructive" />
-          </div>
-          <h3 className="text-h3 font-semibold mt-4">Failed to load users</h3>
-          <p className="text-body text-muted-foreground mt-2 max-w-md">
-            You may not have permission to access user management, or there was a
-            connection error.
-          </p>
-          <Button onClick={() => refetch()} className="mt-6" variant="outline">
-            Try again
-          </Button>
-        </div>
+        <ErrorState
+          heading="Failed to load users"
+          description="You may not have permission to access user management, or there was a connection error."
+          retryLabel="Try again"
+          onRetry={() => refetch()}
+        />
       </div>
     )
   }

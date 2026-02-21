@@ -22,15 +22,21 @@ function formatDateTime(dateStr: string): string {
 export function SelectionSnapshot({ selections, className }: SelectionSnapshotProps) {
   if (selections.length === 0) {
     return (
-      <Card className={cn('transition-all duration-300 hover:shadow-popover', className)}>
+      <Card
+        className={cn(
+          'transition-all duration-300 hover:shadow-popover hover:-translate-y-0.5',
+          'border-l-4 border-l-primary/30',
+          className
+        )}
+      >
         <CardHeader>
           <CardTitle>Selection Snapshot</CardTitle>
-          <CardDescription>Current chosen options</CardDescription>
+          <CardDescription>Current chosen options with timestamps and who selected them</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-              <CheckCircle2 className="h-8 w-8 text-muted-foreground" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary/10 to-primary/5">
+              <CheckCircle2 className="h-8 w-8 text-primary/60" />
             </div>
             <h3 className="text-h3 font-medium mt-4">No selections yet</h3>
             <p className="text-body text-muted-foreground mt-2 max-w-sm">
@@ -43,17 +49,28 @@ export function SelectionSnapshot({ selections, className }: SelectionSnapshotPr
   }
 
   return (
-    <Card className={cn('transition-all duration-300 hover:shadow-popover', className)}>
+    <Card
+      className={cn(
+        'transition-all duration-300 hover:shadow-popover hover:-translate-y-0.5',
+        'border-l-4 border-l-primary/30',
+        className
+      )}
+    >
       <CardHeader>
         <CardTitle>Selection Snapshot</CardTitle>
         <CardDescription>Current chosen options with timestamps and who selected them</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {selections.map((selection) => (
+          {selections.map((selection, index) => (
             <div
               key={selection.id}
-              className="rounded-lg border border-border bg-muted/30 p-4 transition-all duration-200 hover:bg-muted/50"
+              className={cn(
+                'rounded-lg border border-border bg-muted/30 p-4 transition-all duration-200',
+                'hover:bg-muted/50 hover:shadow-sm hover:border-primary/10',
+                'animate-fade-in-up'
+              )}
+              style={{ animationDelay: `${index * 50}ms` }}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
