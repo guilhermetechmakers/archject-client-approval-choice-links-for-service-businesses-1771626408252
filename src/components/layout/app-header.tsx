@@ -33,9 +33,13 @@ export function AppHeader() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+            <Button
+              variant="ghost"
+              className="relative h-10 w-10 rounded-full"
+              aria-label="Open user account menu"
+            >
               <Avatar className="h-10 w-10">
-                <AvatarImage src="" alt="User" />
+                <AvatarImage src="" alt="" />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
             </Button>
@@ -43,8 +47,10 @@ export function AppHeader() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">Account</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-caption font-medium text-foreground">
+                  Account
+                </p>
+                <p className="text-caption text-muted-foreground">
                   user@example.com
                 </p>
               </div>
