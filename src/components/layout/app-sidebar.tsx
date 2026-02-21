@@ -43,15 +43,18 @@ export function AppSidebar() {
 
   return (
     <aside
+      aria-label="Application navigation"
       className={cn(
         'flex h-screen flex-col border-r border-border bg-card transition-all duration-300',
-        collapsed ? 'w-[72px]' : 'w-64'
+        collapsed ? 'w-18' : 'w-64'
       )}
     >
       <div className="flex h-16 items-center justify-between border-b border-border px-4">
-          {!collapsed && (
-          <Link to="/dashboard/overview" className="flex items-center gap-2">
-            <span className="text-h2 font-bold text-primary">Archject</span>
+        {collapsed ? (
+          <h1 className="sr-only">Archject</h1>
+        ) : (
+          <Link to="/dashboard/overview" className="flex items-center gap-2" aria-label="Archject - Go to dashboard">
+            <h1 className="m-0 text-h2 font-bold text-primary">Archject</h1>
           </Link>
         )}
         <Button
@@ -90,7 +93,7 @@ export function AppSidebar() {
             </div>
           )}
 
-          <nav className="space-y-1">
+          <nav aria-label="Main navigation" className="space-y-1">
             {mainNav.map((item) => {
               const isActive = location.pathname === item.href
               return (
@@ -114,7 +117,7 @@ export function AppSidebar() {
 
           <Separator />
 
-          <nav className="space-y-1">
+          <nav aria-label="Secondary navigation" className="space-y-1">
             {secondaryNav.map((item) => {
               const isActive = location.pathname === item.href
               return (
@@ -138,7 +141,7 @@ export function AppSidebar() {
 
           <Separator />
 
-          <nav className="space-y-1">
+          <nav aria-label="Admin navigation" className="space-y-1">
             {adminNav.map((item) => {
               const isActive = location.pathname === item.href
               return (
