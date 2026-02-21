@@ -41,7 +41,7 @@ export function TemplateLibrary({
   }
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+    <Card className="rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-primary" />
@@ -58,8 +58,9 @@ export function TemplateLibrary({
             size="sm"
             onClick={onCreateDefault}
             className="transition-all hover:scale-[1.02] hover:shadow-md"
+            aria-label="Add default template"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4" aria-hidden />
             Add default template
           </Button>
           <>
@@ -69,14 +70,16 @@ export function TemplateLibrary({
               accept=".json"
               className="sr-only"
               onChange={handleFileSelect}
+              aria-label="Import template from JSON file"
             />
             <Button
               variant="outline"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
               className="transition-all hover:scale-[1.02] hover:shadow-md"
+              aria-label="Import template from JSON file"
             >
-              <Upload className="h-4 w-4" />
+              <Upload className="h-4 w-4" aria-hidden />
               Import
             </Button>
           </>
@@ -85,8 +88,9 @@ export function TemplateLibrary({
             size="sm"
             onClick={onExport}
             className="transition-all hover:scale-[1.02] hover:shadow-md"
+            aria-label="Export templates"
           >
-            <Download className="h-4 w-4" />
+            <Download className="h-4 w-4" aria-hidden />
             Export
           </Button>
         </div>
@@ -106,14 +110,18 @@ export function TemplateLibrary({
         </div>
 
         {templates.length === 0 ? (
-          <div className="rounded-lg border border-border p-12 text-center">
-            <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+          <div className="rounded-2xl border border-border p-12 text-center">
+            <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-4" aria-hidden />
             <h3 className="text-h3 font-medium">No templates yet</h3>
             <p className="text-body text-muted-foreground mt-2 max-w-sm mx-auto">
               Create your first default template or import one to get started.
             </p>
-            <Button className="mt-4" onClick={onCreateDefault}>
-              <Plus className="h-4 w-4" />
+            <Button
+              className="mt-4"
+              onClick={onCreateDefault}
+              aria-label="Add your first template"
+            >
+              <Plus className="h-4 w-4" aria-hidden />
               Add template
             </Button>
           </div>

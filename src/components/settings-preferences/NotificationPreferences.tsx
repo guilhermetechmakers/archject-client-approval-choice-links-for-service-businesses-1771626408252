@@ -18,7 +18,7 @@ export function NotificationPreferences({
   if (!settings) return null
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+    <Card className="rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Bell className="h-5 w-5 text-primary" />
@@ -46,6 +46,7 @@ export function NotificationPreferences({
             checked={settings.email_reminders ?? true}
             onCheckedChange={(checked) => onUpdate({ email_reminders: checked })}
             disabled={isUpdating}
+            aria-label="Toggle email reminders for pending approvals"
           />
         </div>
 
@@ -66,6 +67,7 @@ export function NotificationPreferences({
             checked={settings.activity_emails ?? true}
             onCheckedChange={(checked) => onUpdate({ activity_emails: checked })}
             disabled={isUpdating}
+            aria-label="Toggle activity emails when clients take action"
           />
         </div>
 
@@ -86,6 +88,7 @@ export function NotificationPreferences({
             checked={settings.webhooks_enabled ?? false}
             onCheckedChange={(checked) => onUpdate({ webhooks_enabled: checked })}
             disabled={isUpdating}
+            aria-label="Toggle webhooks for real-time events"
           />
         </div>
       </CardContent>

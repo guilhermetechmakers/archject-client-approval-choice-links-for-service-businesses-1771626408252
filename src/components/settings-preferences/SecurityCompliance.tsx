@@ -37,7 +37,7 @@ export function SecurityCompliance({
   if (!settings) return null
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+    <Card className="rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5 text-primary" />
@@ -65,7 +65,7 @@ export function SecurityCompliance({
             onValueChange={(v) => onUpdate({ data_retention_days: parseInt(v, 10) })}
             disabled={isUpdating}
           >
-            <SelectTrigger id="retention" className="w-[140px]">
+            <SelectTrigger id="retention" className="w-[140px]" aria-label="Data retention policy">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -95,6 +95,7 @@ export function SecurityCompliance({
             checked={settings.export_enabled ?? true}
             onCheckedChange={(checked) => onUpdate({ export_enabled: checked })}
             disabled={isUpdating}
+            aria-label="Toggle export settings for user data"
           />
         </div>
 
@@ -108,7 +109,7 @@ export function SecurityCompliance({
             onValueChange={(v) => onUpdate({ consent_default: v })}
             disabled={isUpdating}
           >
-            <SelectTrigger id="consent-default">
+            <SelectTrigger id="consent-default" aria-label="Consent defaults for new clients">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

@@ -11,29 +11,48 @@ import {
   Integrations,
 } from '@/components/settings-preferences'
 import { useSettingsPreferences, useUpdateSettingsPreferences } from '@/hooks/use-settings-preferences'
-import { Bell, FileText, Globe, Shield, Plug, AlertCircle } from 'lucide-react'
+import { Bell, FileText, Globe, Shield, Plug, AlertCircle, Loader2 } from 'lucide-react'
 import type { SettingsPreferences } from '@/types/settings-preferences'
 
 function PreferencesSkeleton() {
   return (
     <div className="space-y-6">
-      <Skeleton className="h-10 w-64" />
-      <Skeleton className="h-96 w-full rounded-lg" />
+      <Skeleton className="h-10 w-64 rounded-2xl" />
+      <Skeleton className="h-96 w-full rounded-2xl" />
     </div>
   )
 }
 
-function PreferencesError({ onRetry }: { onRetry: () => void }) {
+function PreferencesError({
+  onRetry,
+  isRetrying,
+}: {
+  onRetry: () => void
+  isRetrying?: boolean
+}) {
   return (
-    <Card className="border-destructive/50">
+    <Card className="rounded-2xl border-destructive/50">
       <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-        <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+        <AlertCircle className="h-12 w-12 text-destructive mb-4" aria-hidden />
         <h3 className="text-h3 font-medium">Something went wrong</h3>
         <p className="text-body text-muted-foreground mt-2 max-w-sm">
           We couldn&apos;t load your settings. Please try again.
         </p>
-        <Button onClick={onRetry} className="mt-6">
-          Try again
+        <Button
+          onClick={onRetry}
+          className="mt-6"
+          disabled={isRetrying}
+          aria-label="Retry loading settings"
+          aria-busy={isRetrying}
+        >
+          {isRetrying ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+              Loading…
+            </>
+          ) : (
+            'Try again'
+          )}
         </Button>
       </CardContent>
     </Card>
@@ -41,7 +60,7 @@ function PreferencesError({ onRetry }: { onRetry: () => void }) {
 }
 
 export default function PreferencesPage() {
-  const { data: settings, isLoading, isError, refetch } = useSettingsPreferences()
+  const { data: settings, isLoading, isError, isRefetching, refetch } = useSettingsPreferences()
   const updateMutation = useUpdateSettingsPreferences()
 
   useEffect(() => {
@@ -88,7 +107,7 @@ export default function PreferencesPage() {
             Global application settings and default behaviors
           </p>
         </div>
-        <PreferencesError onRetry={() => refetch()} />
+        <PreferencesError onRetry={() => refetch()} isRetrying={isRefetching} />
       </div>
     )
   }
@@ -102,28 +121,62 @@ export default function PreferencesPage() {
             Global application settings, notification preferences, template library, and default behaviors
           </p>
         </div>
+        {updateMutation.isPending && (
+          <div
+            className="flex items-center gap-2 text-caption text-muted-foreground"
+            role="status"
+            aria-live="polite"
+            aria-label="Saving settings"
+          >
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+            Saving…
+          </div>
+        )}
       </div>
 
       <Tabs defaultValue="notifications" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 gap-2 p-1 h-auto">
-          <TabsTrigger value="notifications" className="flex items-center gap-2 py-2">
-            <Bell className="h-4 w-4" />
+        <TabsList
+          className="grid w-full grid-cols-2 sm:grid-cols-5 gap-2 p-1 h-auto rounded-2xl"
+          aria-label="Settings navigation tabs"
+        >
+          <TabsTrigger
+            value="notifications"
+            className="flex items-center gap-2 py-2 rounded-xl"
+            aria-label="Notifications settings"
+          >
+            <Bell className="h-4 w-4" aria-hidden />
             <span className="hidden sm:inline">Notifications</span>
           </TabsTrigger>
-          <TabsTrigger value="templates" className="flex items-center gap-2 py-2">
-            <FileText className="h-4 w-4" />
+          <TabsTrigger
+            value="templates"
+            className="flex items-center gap-2 py-2 rounded-xl"
+            aria-label="Template library"
+          >
+            <FileText className="h-4 w-4" aria-hidden />
             <span className="hidden sm:inline">Templates</span>
           </TabsTrigger>
-          <TabsTrigger value="brand" className="flex items-center gap-2 py-2">
-            <Globe className="h-4 w-4" />
+          <TabsTrigger
+            value="brand"
+            className="flex items-center gap-2 py-2 rounded-xl"
+            aria-label="Brand and link settings"
+          >
+            <Globe className="h-4 w-4" aria-hidden />
             <span className="hidden sm:inline">Brand</span>
           </TabsTrigger>
-          <TabsTrigger value="security" className="flex items-center gap-2 py-2">
-            <Shield className="h-4 w-4" />
+          <TabsTrigger
+            value="security"
+            className="flex items-center gap-2 py-2 rounded-xl"
+            aria-label="Security and compliance"
+          >
+            <Shield className="h-4 w-4" aria-hidden />
             <span className="hidden sm:inline">Security</span>
           </TabsTrigger>
-          <TabsTrigger value="integrations" className="flex items-center gap-2 py-2">
-            <Plug className="h-4 w-4" />
+          <TabsTrigger
+            value="integrations"
+            className="flex items-center gap-2 py-2 rounded-xl"
+            aria-label="Integrations"
+          >
+            <Plug className="h-4 w-4" aria-hidden />
             <span className="hidden sm:inline">Integrations</span>
           </TabsTrigger>
         </TabsList>

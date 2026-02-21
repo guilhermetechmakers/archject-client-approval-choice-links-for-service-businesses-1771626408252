@@ -19,7 +19,7 @@ export function BrandLinkSettings({
   if (!settings) return null
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+    <Card className="rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Globe className="h-5 w-5 text-primary" />
@@ -42,6 +42,7 @@ export function BrandLinkSettings({
             onChange={(e) => onUpdate({ branded_domain: e.target.value })}
             disabled={isUpdating}
             className="transition-all focus:ring-2 focus:ring-primary/20"
+            aria-label="Branded domain for approval links"
           />
           <p className="text-caption text-muted-foreground">
             Use your own domain for approval links
@@ -67,6 +68,7 @@ export function BrandLinkSettings({
                 onChange={(e) => onUpdate({ default_logo_url: e.target.value })}
                 disabled={isUpdating}
                 className="transition-all focus:ring-2 focus:ring-primary/20"
+                aria-label="Default logo URL for approval pages"
               />
               <p className="text-caption text-muted-foreground">
                 URL for your default logo on approval pages
@@ -87,6 +89,7 @@ export function BrandLinkSettings({
             onChange={(e) => onUpdate({ default_cta_copy: e.target.value })}
             disabled={isUpdating}
             className="transition-all focus:ring-2 focus:ring-primary/20"
+            aria-label="Default CTA button text on approval links"
           />
           <p className="text-caption text-muted-foreground">
             Button text shown on approval links

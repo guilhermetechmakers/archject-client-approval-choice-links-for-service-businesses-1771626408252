@@ -26,7 +26,7 @@ const typeIcons = {
 
 export function Integrations() {
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+    <Card className="rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Plug className="h-5 w-5 text-primary" />
@@ -71,6 +71,7 @@ export function Integrations() {
                     variant={integration.connected ? 'outline' : 'default'}
                     size="sm"
                     className="transition-all hover:scale-[1.02]"
+                    aria-label={integration.connected ? `Configure ${integration.name}` : `Connect ${integration.name}`}
                   >
                     {integration.connected ? 'Configure' : 'Connect'}
                   </Button>
@@ -86,7 +87,7 @@ export function Integrations() {
           <p className="text-body text-muted-foreground mt-2 max-w-sm mx-auto">
             Contact support to request integrations with your favorite tools.
           </p>
-          <Button variant="outline" className="mt-4">
+          <Button variant="outline" className="mt-4" aria-label="Request new integration from support">
             Request integration
           </Button>
         </div>
