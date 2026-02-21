@@ -1,14 +1,18 @@
 import { Link } from 'react-router-dom'
+import { Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden py-24 md:py-32">
+    <section
+      className="relative overflow-hidden py-24 md:py-32"
+      aria-labelledby="hero-heading"
+    >
       {/* Animated gradient mesh background */}
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0 -z-10" aria-hidden="true">
         <div className="absolute inset-0 opacity-90 hero-gradient-bg" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(var(--primary),0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgb(var(--primary)_/_0.15),transparent_50%)]" />
         {/* Morphing blob shapes */}
         <div
           className={cn(
@@ -35,6 +39,7 @@ export function HeroSection() {
       <div className="container">
         <div className="mx-auto max-w-3xl text-center">
           <h1
+            id="hero-heading"
             className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl animate-fade-in-up"
             style={{ animationFillMode: 'both' }}
           >
@@ -65,7 +70,9 @@ export function HeroSection() {
                 'transition-all duration-300'
               )}
             >
-              <Link to="/signup">Sign up free</Link>
+              <Link to="/signup" aria-label="Sign up for free account">
+                Sign up free
+              </Link>
             </Button>
             <Button
               asChild
@@ -78,7 +85,9 @@ export function HeroSection() {
                 'transition-all duration-300'
               )}
             >
-              <Link to="/request-demo">Request demo</Link>
+              <Link to="/request-demo" aria-label="Request a product demo">
+                Request demo
+              </Link>
             </Button>
           </div>
 
@@ -86,24 +95,16 @@ export function HeroSection() {
           <div
             className="mt-16 relative animate-fade-in-up"
             style={{ animationDelay: '300ms', animationFillMode: 'both' }}
+            aria-hidden="true"
           >
-            <div className="relative mx-auto max-w-4xl rounded-2xl border border-border bg-card/50 p-8 shadow-2xl backdrop-blur-sm overflow-hidden transition-all duration-300 hover:shadow-[0_20px_50px_rgba(var(--primary),0.15)] hover:-translate-y-0.5">
+            <div className="relative mx-auto max-w-4xl rounded-2xl border border-border bg-card/50 p-8 shadow-2xl backdrop-blur-sm overflow-hidden transition-all duration-300 hover:shadow-hero-card hover:-translate-y-0.5">
               <div className="aspect-video rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border border-primary/10">
                 <div className="text-center text-muted-foreground">
                   <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/20 mb-4 transition-transform duration-300 hover:scale-110">
-                    <svg
+                    <Zap
                       className="h-8 w-8 text-primary"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
+                      aria-hidden="true"
+                    />
                   </div>
                   <p className="text-caption">Approval workflow preview</p>
                 </div>

@@ -74,6 +74,7 @@ export default {
         card: '0 1px 2px rgba(0, 0, 0, 0.1)',
         popover: '0 2px 4px rgba(0, 0, 0, 0.1)',
         modal: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        'hero-card': '0 20px 50px rgb(var(--primary) / 0.15)',
       },
       spacing: {
         '18': '4.5rem',
