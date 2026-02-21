@@ -3,8 +3,7 @@ import { LandingPage } from '@/pages/LandingPage'
 import { RequestDemoPage } from '@/pages/request-demo'
 import { LoginPage } from '@/pages/login'
 import { SignupPage } from '@/pages/signup'
-import { ForgotPasswordPage } from '@/pages/forgot-password'
-import { ResetPasswordPage } from '@/pages/reset-password'
+import { PasswordResetPage } from '@/pages/implement-password-reset-page'
 import { EmailVerificationPage } from '@/pages/email-verification'
 import { HelpPage } from '@/pages/help'
 import HelpCenterPage from '@/pages/About/HelpCenter'
@@ -42,8 +41,9 @@ export const router = createBrowserRouter([
   { path: '/request-demo', element: <RequestDemoPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/signup', element: <SignupPage /> },
-  { path: '/forgot-password', element: <ForgotPasswordPage /> },
-  { path: '/reset-password', element: <ResetPasswordPage /> },
+  { path: '/forgot-password', element: <PasswordResetPage /> },
+  { path: '/reset-password', element: <PasswordResetPage /> },
+  { path: '/password-reset', element: <PasswordResetPage /> },
   { path: '/verify-email', element: <EmailVerificationPage /> },
   { path: '/email-verification-page', element: <EmailVerificationPage /> },
   { path: '/help', element: <HelpPage /> },
