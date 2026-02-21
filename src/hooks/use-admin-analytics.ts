@@ -39,11 +39,13 @@ export function useExportAdminAnalytics() {
       }
     },
     onSuccess: (_, variables) => {
-      toast.success(`Report exported as ${variables.format.toUpperCase()}`)
+      toast.success(`Report exported as ${variables.format.toUpperCase()}`, {
+        id: 'admin-analytics-export',
+      })
       queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
     onError: () => {
-      toast.error('Failed to export report')
+      toast.error('Failed to export report', { id: 'admin-analytics-export' })
     },
   })
 }

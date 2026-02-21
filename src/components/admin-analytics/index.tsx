@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   BarChart3,
@@ -10,6 +11,7 @@ import {
   Activity,
   TrendingUp,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -122,9 +124,9 @@ export function AdminAnalytics({
 
   if (!data) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-12 text-center animate-fade-in-up">
+      <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-12 text-center shadow-card animate-fade-in-up">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-          <BarChart3 className="h-8 w-8 text-muted-foreground" />
+          <BarChart3 className="h-8 w-8 text-muted-foreground" aria-hidden />
         </div>
         <h3 className="text-h3 font-semibold mt-4">No analytics data</h3>
         <p className="text-body text-muted-foreground mt-2 max-w-md">
@@ -135,13 +137,19 @@ export function AdminAnalytics({
   }
 
   const { metrics, usageData, auditLogs } = data
+
+  useEffect(() => {
+    if (isExporting) {
+      toast.loading('Exporting report...', { id: 'admin-analytics-export' })
+    }
+  }, [isExporting])
   const trendKeys = ['trendUsers', 'trendLinks', 'trendApprovals'] as const
 
   return (
     <div className="space-y-8 animate-fade-in-up">
       {showExportSuccess && onExportSuccessDismiss && (
         <div
-          className="flex items-center justify-between rounded-lg border border-success/30 bg-success/5 p-4 animate-fade-in-up"
+          className="flex items-center justify-between rounded-lg border border-success/30 bg-success/5 p-4 shadow-card animate-fade-in-up"
           role="status"
           aria-live="polite"
         >
@@ -156,7 +164,12 @@ export function AdminAnalytics({
               </p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={onExportSuccessDismiss}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onExportSuccessDismiss}
+            aria-label="Dismiss export success message"
+          >
             Dismiss
           </Button>
         </div>
@@ -171,16 +184,27 @@ export function AdminAnalytics({
         {onExport && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" disabled={isExporting}>
-                <Download className="h-5 w-5" />
+              <Button
+                variant="outline"
+                disabled={isExporting}
+                aria-label="Export analytics report"
+                aria-haspopup="menu"
+              >
+                <Download className="h-5 w-5" aria-hidden />
                 Export Report
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onExport('csv')}>
+            <DropdownMenuContent align="end" aria-label="Export format options">
+              <DropdownMenuItem
+                onClick={() => onExport('csv')}
+                aria-label="Export report as CSV file"
+              >
                 Export as CSV
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onExport('json')}>
+              <DropdownMenuItem
+                onClick={() => onExport('json')}
+                aria-label="Export report as JSON file"
+              >
                 Export as JSON
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -195,10 +219,14 @@ export function AdminAnalytics({
           const trend = trendKey ? metrics[trendKey] : 0
           const Icon = config.icon
           return (
-            <Link key={config.key} to={config.href}>
+            <Link
+              key={config.key}
+              to={config.href}
+              aria-label={`View ${config.title.toLowerCase()} - ${value} total`}
+            >
               <Card
                 className={cn(
-                  'h-full transition-all duration-300 hover:shadow-modal hover:-translate-y-0.5 hover:border-primary/30',
+                  'h-full shadow-card transition-all duration-300 hover:shadow-modal hover:-translate-y-0.5 hover:border-primary/30',
                   `bg-gradient-to-br ${config.gradient}`
                 )}
               >
@@ -226,19 +254,22 @@ export function AdminAnalytics({
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card className="shadow-card">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
+                <BarChart3 className="h-5 w-5" aria-hidden />
                 Usage Analytics
               </CardTitle>
               <CardDescription>Users, links, and approvals over time</CardDescription>
             </div>
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/dashboard/admin">
+              <Link
+                to="/dashboard/admin"
+                aria-label="View detailed usage analytics"
+              >
                 View details
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4" aria-hidden />
               </Link>
             </Button>
           </CardHeader>
@@ -273,30 +304,43 @@ export function AdminAnalytics({
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="shadow-card">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5" />
+                <Activity className="h-5 w-5" aria-hidden />
                 Audit Log
               </CardTitle>
               <CardDescription>Recent admin actions</CardDescription>
             </div>
             <Button variant="outline" size="sm" asChild>
-              <Link to="/dashboard/admin/users">
+              <Link
+                to="/dashboard/admin/users"
+                aria-label="Manage users and roles"
+              >
                 Manage Users
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4" aria-hidden />
               </Link>
             </Button>
           </CardHeader>
           <CardContent>
             {auditLogs.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Activity className="h-12 w-12 text-muted-foreground/50" />
-                <p className="text-body text-muted-foreground mt-4">No audit events yet</p>
-                <p className="text-caption text-muted-foreground mt-1">
-                  Admin actions will appear here
+                <Activity
+                  className="h-12 w-12 text-muted-foreground/50"
+                  aria-hidden
+                />
+                <h3 className="text-h3 font-semibold mt-4">No audit events yet</h3>
+                <p className="text-caption text-muted-foreground mt-1 max-w-sm">
+                  Admin actions will appear here when you manage users or perform
+                  admin tasks.
                 </p>
+                <Button asChild className="mt-6" aria-label="Go to manage users to create audit activity">
+                  <Link to="/dashboard/admin/users">
+                    <Users className="h-4 w-4" aria-hidden />
+                    Manage Users
+                  </Link>
+                </Button>
               </div>
             ) : (
               <div className="space-y-4 max-h-[300px] overflow-y-auto">
@@ -331,13 +375,21 @@ export function AdminAnalytics({
 
       <div className="flex flex-wrap gap-4">
         <Button asChild variant="outline">
-          <Link to="/dashboard/admin/users">
-            <Users className="h-5 w-5" />
+          <Link
+            to="/dashboard/admin/users"
+            aria-label="Manage users and roles"
+          >
+            <Users className="h-5 w-5" aria-hidden />
             Manage Users & Roles
           </Link>
         </Button>
         <Button asChild variant="outline">
-          <Link to="/dashboard/orders">View Transactions</Link>
+          <Link
+            to="/dashboard/orders"
+            aria-label="View transactions"
+          >
+            View Transactions
+          </Link>
         </Button>
       </div>
     </div>
@@ -346,45 +398,45 @@ export function AdminAnalytics({
 
 function AdminAnalyticsSkeleton() {
   return (
-    <div className="space-y-8 animate-fade-in-up">
+    <div className="space-y-8 animate-fade-in-up" aria-busy="true" aria-label="Loading admin analytics">
       <div>
-        <Skeleton className="h-9 w-64" />
-        <Skeleton className="h-5 w-96 mt-2" />
+        <Skeleton className="h-9 w-64 skeleton-shimmer" />
+        <Skeleton className="h-5 w-96 mt-2 skeleton-shimmer" />
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
-          <Card key={i}>
+          <Card key={i} className="shadow-card">
             <CardHeader className="pb-2">
-              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 w-24 skeleton-shimmer" />
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-10 w-16" />
-              <Skeleton className="h-4 w-32 mt-2" />
+              <Skeleton className="h-10 w-16 skeleton-shimmer" />
+              <Skeleton className="h-4 w-32 mt-2 skeleton-shimmer" />
             </CardContent>
           </Card>
         ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card className="shadow-card">
           <CardHeader>
-            <Skeleton className="h-6 w-40" />
-            <Skeleton className="h-4 w-64 mt-1" />
+            <Skeleton className="h-6 w-40 skeleton-shimmer" />
+            <Skeleton className="h-4 w-64 mt-1 skeleton-shimmer" />
           </CardHeader>
           <CardContent>
-            <Skeleton className="h-[300px] w-full" />
+            <Skeleton className="h-[300px] w-full skeleton-shimmer" />
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-card">
           <CardHeader>
-            <Skeleton className="h-6 w-32" />
-            <Skeleton className="h-4 w-48 mt-1" />
+            <Skeleton className="h-6 w-32 skeleton-shimmer" />
+            <Skeleton className="h-4 w-48 mt-1 skeleton-shimmer" />
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[1, 2, 3, 4].map((i) => (
-                <Skeleton key={i} className="h-20 w-full" />
+                <Skeleton key={i} className="h-20 w-full skeleton-shimmer" />
               ))}
             </div>
           </CardContent>
