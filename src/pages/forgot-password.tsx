@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,6 +23,13 @@ type FormData = z.infer<typeof schema>
 export function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    document.title = 'Reset Password | Archject'
+    return () => {
+      document.title = 'Archject'
+    }
+  }, [])
   const {
     register,
     handleSubmit,
@@ -105,9 +112,11 @@ export function ForgotPasswordPage() {
                     {...register('email')}
                     className={errors.email ? 'border-destructive focus-visible:ring-destructive/20' : ''}
                     autoComplete="email"
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? 'email-error' : undefined}
                   />
                   {errors.email && (
-                    <p className="text-caption text-destructive">
+                    <p id="email-error" className="text-caption text-destructive" role="alert">
                       {errors.email.message}
                     </p>
                   )}

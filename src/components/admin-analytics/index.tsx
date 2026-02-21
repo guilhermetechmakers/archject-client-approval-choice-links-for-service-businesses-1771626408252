@@ -9,7 +9,6 @@ import {
   ChevronRight,
   Activity,
   TrendingUp,
-  AlertCircle,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -30,6 +29,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { cn } from '@/lib/utils'
+import { ErrorState } from '@/components/loading-success-pages'
 import type { AdminAnalyticsResponse, AdminAuditLog } from '@/types/admin-analytics'
 
 const METRIC_CONFIG = [
@@ -90,6 +90,9 @@ export interface AdminAnalyticsProps {
   onRetry?: () => void
   onExport?: (format: 'csv' | 'json') => void
   isExporting?: boolean
+  /** Show success banner when export completes */
+  showExportSuccess?: boolean
+  onExportSuccessDismiss?: () => void
 }
 
 export function AdminAnalytics({
@@ -99,6 +102,8 @@ export function AdminAnalytics({
   onRetry,
   onExport,
   isExporting,
+  showExportSuccess,
+  onExportSuccessDismiss,
 }: AdminAnalyticsProps) {
   if (isLoading) {
     return <AdminAnalyticsSkeleton />
@@ -106,18 +111,12 @@ export function AdminAnalytics({
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-12 text-center animate-fade-in-up">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-          <AlertCircle className="h-8 w-8 text-destructive" />
-        </div>
-        <h3 className="text-h3 font-semibold mt-4">Failed to load analytics</h3>
-        <p className="text-body text-muted-foreground mt-2 max-w-md">
-          There was a problem loading the admin dashboard. Please try again.
-        </p>
-        <Button onClick={onRetry} className="mt-6" variant="outline">
-          Try again
-        </Button>
-      </div>
+      <ErrorState
+        heading="Failed to load analytics"
+        description="There was a problem loading the admin dashboard. Please try again."
+        retryLabel="Try again"
+        onRetry={onRetry}
+      />
     )
   }
 
@@ -140,6 +139,28 @@ export function AdminAnalytics({
 
   return (
     <div className="space-y-8 animate-fade-in-up">
+      {showExportSuccess && onExportSuccessDismiss && (
+        <div
+          className="flex items-center justify-between rounded-lg border border-success/30 bg-success/5 p-4 animate-fade-in-up"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-success/10">
+              <FileCheck className="h-5 w-5 text-success" />
+            </div>
+            <div>
+              <p className="text-body font-medium">Report exported successfully</p>
+              <p className="text-caption text-muted-foreground">
+                Your file has been downloaded.
+              </p>
+            </div>
+          </div>
+          <Button variant="ghost" size="sm" onClick={onExportSuccessDismiss}>
+            Dismiss
+          </Button>
+        </div>
+      )}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-h1 font-bold">Admin Dashboard</h1>

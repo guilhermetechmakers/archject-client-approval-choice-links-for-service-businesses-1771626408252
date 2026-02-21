@@ -37,7 +37,6 @@ export function ResetPasswordPage() {
   const location = useLocation()
   const [pageState, setPageState] = useState<PageState>('loading')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [passwordValue, setPasswordValue] = useState('')
 
   const {
     register,
@@ -60,15 +59,23 @@ export function ResetPasswordPage() {
     const hash = location.hash
     const params = new URLSearchParams(hash.replace('#', ''))
 
-    if (params.get('type') === 'recovery' && (params.get('access_token') || params.get('refresh_token'))) {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      if (error) {
-        setPageState('invalid')
-        return
-      }
-      if (session) {
-        setPageState('valid')
-        return
+    const hasRecoveryParams =
+      params.get('type') === 'recovery' &&
+      (params.get('access_token') || params.get('refresh_token'))
+
+    if (hasRecoveryParams) {
+      // Supabase may need a moment to exchange the hash for a session
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error) {
+          setPageState('invalid')
+          return
+        }
+        if (session?.user) {
+          setPageState('valid')
+          return
+        }
+        await new Promise((r) => setTimeout(r, 300 * (attempt + 1)))
       }
     }
 
@@ -84,6 +91,13 @@ export function ResetPasswordPage() {
   useEffect(() => {
     validateRecoverySession()
   }, [validateRecoverySession])
+
+  useEffect(() => {
+    document.title = 'Set New Password | Archject'
+    return () => {
+      document.title = 'Archject'
+    }
+  }, [])
 
   const onSubmit = async (data: ResetFormData) => {
     setIsSubmitting(true)
@@ -210,17 +224,19 @@ export function ResetPasswordPage() {
                   id="password"
                   type="password"
                   placeholder="••••••••"
-                  {...register('password', {
-                    onChange: (e) => setPasswordValue(e.target.value),
-                  })}
+                  {...register('password')}
                   className={errors.password ? 'border-destructive focus-visible:ring-destructive/20' : ''}
                   autoComplete="new-password"
+                  aria-invalid={!!errors.password}
+                  aria-describedby={
+                    errors.password ? 'password-error' : password ? 'password-strength' : undefined
+                  }
                 />
-                {passwordValue && (
-                  <PasswordStrengthMeter result={strengthResult} />
+                {password && (
+                  <PasswordStrengthMeter result={strengthResult} id="password-strength" />
                 )}
                 {errors.password && (
-                  <p className="text-caption text-destructive">
+                  <p id="password-error" className="text-caption text-destructive" role="alert">
                     {errors.password.message}
                   </p>
                 )}
@@ -234,9 +250,11 @@ export function ResetPasswordPage() {
                   {...register('confirmPassword')}
                   className={errors.confirmPassword ? 'border-destructive focus-visible:ring-destructive/20' : ''}
                   autoComplete="new-password"
+                  aria-invalid={!!errors.confirmPassword}
+                  aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
                 />
                 {errors.confirmPassword && (
-                  <p className="text-caption text-destructive">
+                  <p id="confirmPassword-error" className="text-caption text-destructive" role="alert">
                     {errors.confirmPassword.message}
                   </p>
                 )}

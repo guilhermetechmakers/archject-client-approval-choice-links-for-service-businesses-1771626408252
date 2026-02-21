@@ -6,12 +6,14 @@ export interface PasswordStrengthMeterProps {
   result: PasswordStrengthResult
   showChecks?: boolean
   className?: string
+  id?: string
 }
 
 export function PasswordStrengthMeter({
   result,
   showChecks = true,
   className,
+  id,
 }: PasswordStrengthMeterProps) {
   const progressColor =
     result.color === 'destructive'
@@ -23,7 +25,7 @@ export function PasswordStrengthMeter({
           : 'bg-success'
 
   return (
-    <div className={cn('space-y-2', className)} role="status" aria-live="polite">
+    <div id={id} className={cn('space-y-2', className)} role="status" aria-live="polite">
       <div className="flex items-center justify-between gap-2">
         <span
           className={cn(
