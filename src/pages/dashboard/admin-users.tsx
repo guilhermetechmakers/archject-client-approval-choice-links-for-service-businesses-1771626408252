@@ -11,7 +11,6 @@ import {
   useBulkUpdateUserRoles,
 } from '@/hooks/use-admin-users'
 import { AdminUserManagement } from '@/components/admin-user-management'
-import { AdminUsersSkeleton } from '@/components/admin-user-management/AdminUsersSkeleton'
 
 export function AdminUsersPage() {
   const [search, setSearch] = useState('')
@@ -42,10 +41,6 @@ export function AdminUsersPage() {
     role: 'Admin' | 'Member' | 'Viewer'
   ) => {
     bulkUpdateMutation.mutate({ userIds, role })
-  }
-
-  if (isLoading) {
-    return <AdminUsersPageSkeleton />
   }
 
   if (isError) {
@@ -103,6 +98,7 @@ export function AdminUsersPage() {
         isUpdatingRole={updateRoleMutation.isPending}
         isInviting={inviteMutation.isPending}
         isBulkUpdating={bulkUpdateMutation.isPending}
+        isLoading={isLoading}
       />
 
       <div className="flex flex-wrap gap-4">
@@ -116,14 +112,6 @@ export function AdminUsersPage() {
           <Link to="/dashboard/orders">View Transactions</Link>
         </Button>
       </div>
-    </div>
-  )
-}
-
-function AdminUsersPageSkeleton() {
-  return (
-    <div className="space-y-6 animate-fade-in-up">
-      <AdminUsersSkeleton />
     </div>
   )
 }

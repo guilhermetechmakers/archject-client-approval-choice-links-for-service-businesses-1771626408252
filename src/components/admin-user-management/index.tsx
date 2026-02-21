@@ -53,6 +53,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import type { AdminUser } from '@/types/admin-users'
 
@@ -97,6 +98,7 @@ export interface AdminUserManagementProps {
   isUpdatingRole?: boolean
   isInviting?: boolean
   isBulkUpdating?: boolean
+  isLoading?: boolean
 }
 
 export function AdminUserManagement({
@@ -113,6 +115,7 @@ export function AdminUserManagement({
   isUpdatingRole,
   isInviting,
   isBulkUpdating,
+  isLoading = false,
 }: AdminUserManagementProps) {
   const [inviteOpen, setInviteOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState('')
@@ -156,6 +159,7 @@ export function AdminUserManagement({
           variant="ghost"
           className="-ml-4 hover:bg-transparent"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          aria-label={`Sort by user name ${column.getIsSorted() === 'asc' ? '(ascending)' : column.getIsSorted() === 'desc' ? '(descending)' : ''}`}
         >
           User
           {column.getIsSorted() === 'asc' ? (
@@ -183,6 +187,7 @@ export function AdminUserManagement({
           variant="ghost"
           className="-ml-4 hover:bg-transparent"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          aria-label={`Sort by role ${column.getIsSorted() === 'asc' ? '(ascending)' : column.getIsSorted() === 'desc' ? '(descending)' : ''}`}
         >
           Role
           {column.getIsSorted() === 'asc' ? (
@@ -203,6 +208,7 @@ export function AdminUserManagement({
           variant="ghost"
           className="-ml-4 hover:bg-transparent"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          aria-label={`Sort by join date ${column.getIsSorted() === 'asc' ? '(ascending)' : column.getIsSorted() === 'desc' ? '(descending)' : ''}`}
         >
           Joined
           {column.getIsSorted() === 'asc' ? (
@@ -232,9 +238,10 @@ export function AdminUserManagement({
                 size="sm"
                 disabled={isUpdatingRole}
                 className="transition-transform hover:scale-[1.02]"
+                aria-label={`Edit role for ${row.original.email}`}
               >
                 Edit role
-                <ChevronDown className="ml-1 h-4 w-4" />
+                <ChevronDown className="ml-1 h-4 w-4" aria-hidden />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -296,8 +303,11 @@ export function AdminUserManagement({
         </div>
         <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
           <DialogTrigger asChild>
-            <Button className="transition-transform hover:scale-[1.02] active:scale-[0.98]">
-              <UserPlus className="h-5 w-5" />
+            <Button
+              className="transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              aria-label="Invite new user to organization"
+            >
+              <UserPlus className="h-5 w-5" aria-hidden />
               Invite User
             </Button>
           </DialogTrigger>
@@ -357,7 +367,7 @@ export function AdminUserManagement({
         </Dialog>
       </div>
 
-      <Card className="transition-shadow duration-300 hover:shadow-modal">
+      <Card className="rounded-2xl border-border bg-card shadow-card transition-shadow duration-300 hover:shadow-modal">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
@@ -368,7 +378,7 @@ export function AdminUserManagement({
           </CardDescription>
           <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
               <Input
                 placeholder="Search by name or email..."
                 value={search}
@@ -377,12 +387,17 @@ export function AdminUserManagement({
                   onPageChange(1)
                 }}
                 className="pl-9"
+                aria-label="Search users by name or email"
               />
             </div>
             {hasSelection && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" disabled={isBulkUpdating}>
+                  <Button
+                    variant="outline"
+                    disabled={isBulkUpdating}
+                    aria-label={`Change role for ${selectedIds.length} selected user${selectedIds.length > 1 ? 's' : ''}`}
+                  >
                     Change role ({selectedIds.length})
                   </Button>
                 </DropdownMenuTrigger>
@@ -401,27 +416,102 @@ export function AdminUserManagement({
           </div>
         </CardHeader>
         <CardContent>
-          {!users.length ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                <Users className="h-8 w-8 text-muted-foreground" />
+          {isLoading ? (
+            <div className="space-y-4" role="status" aria-label="Loading users">
+              <div className="hidden md:block rounded-2xl border border-border overflow-hidden">
+                <div className="overflow-x-auto">
+                  <Table aria-hidden>
+                    <TableHeader>
+                      <TableRow className="hover:bg-transparent border-b bg-muted/30">
+                        <TableHead className="w-12">
+                          <Skeleton className="h-4 w-4 rounded-sm" />
+                        </TableHead>
+                        <TableHead>
+                          <Skeleton className="h-4 w-24" />
+                        </TableHead>
+                        <TableHead>
+                          <Skeleton className="h-4 w-16" />
+                        </TableHead>
+                        <TableHead>
+                          <Skeleton className="h-4 w-20" />
+                        </TableHead>
+                        <TableHead className="w-24" />
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <TableRow key={i} className="hover:bg-transparent">
+                          <TableCell>
+                            <Skeleton className="h-4 w-4 rounded-sm" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="space-y-1">
+                              <Skeleton className="h-4 w-32" />
+                              <Skeleton className="h-3 w-48" />
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-4 w-16" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-4 w-20" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-8 w-20" />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
-              <h3 className="text-h3 font-semibold mt-4">No users found</h3>
+              <div className="md:hidden space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="rounded-2xl border border-border bg-card p-4 space-y-3"
+                  >
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-48" />
+                    <div className="flex gap-2">
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                      <Skeleton className="h-4 w-20" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : !users.length ? (
+            <div
+              className="flex flex-col items-center justify-center py-16 px-4 text-center rounded-2xl border-2 border-dashed border-border bg-muted/30"
+              role="status"
+              aria-label="No users found"
+            >
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                <Users className="h-8 w-8" aria-hidden />
+              </div>
+              <h3 className="text-h3 font-semibold mt-4 text-foreground">
+                No users found
+              </h3>
               <p className="text-body text-muted-foreground mt-2 max-w-sm">
                 {search
                   ? "Try adjusting your search to find what you're looking for."
                   : 'Invite team members to get started.'}
               </p>
               {!search && (
-                <Button onClick={() => setInviteOpen(true)} className="mt-6">
-                  <UserPlus className="h-5 w-5" />
+                <Button
+                  onClick={() => setInviteOpen(true)}
+                  className="mt-6 min-h-[44px] min-w-[44px]"
+                  aria-label="Invite your first user"
+                >
+                  <UserPlus className="h-5 w-5" aria-hidden />
                   Invite User
                 </Button>
               )}
             </div>
           ) : (
             <>
-              <div className="hidden md:block rounded-lg border border-border overflow-hidden">
+              <div className="hidden md:block rounded-2xl border border-border overflow-hidden">
                 <div className="overflow-x-auto">
                   <Table aria-label="Users table with columns for selection, name, email, role, and actions">
                     <TableHeader>
@@ -479,7 +569,7 @@ export function AdminUserManagement({
                 {users.map((user) => (
                   <Card
                     key={user.id}
-                    className="transition-all duration-300 hover:shadow-modal hover:border-primary/20"
+                    className="rounded-2xl border-border transition-all duration-300 hover:shadow-modal hover:border-primary/20"
                   >
                     <CardContent className="pt-4">
                       <div className="flex items-start justify-between gap-4">
@@ -503,10 +593,11 @@ export function AdminUserManagement({
                               variant="outline"
                               size="sm"
                               disabled={isUpdatingRole}
-                              className="shrink-0"
+                              className="shrink-0 min-h-[44px] min-w-[44px]"
+                              aria-label={`Edit role for ${user.email}`}
                             >
                               Edit
-                              <ChevronDown className="ml-1 h-4 w-4" />
+                              <ChevronDown className="ml-1 h-4 w-4" aria-hidden />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
@@ -532,12 +623,14 @@ export function AdminUserManagement({
                     Showing {(page - 1) * pageSize + 1}–
                     {Math.min(page * pageSize, total)} of {total} users
                   </p>
-                  <div className="flex gap-2">
+                  <nav className="flex gap-2" aria-label="Pagination">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => onPageChange(Math.max(1, page - 1))}
                       disabled={!hasPrevPage}
+                      aria-label="Go to previous page"
+                      className="min-h-[44px] min-w-[44px]"
                     >
                       Previous
                     </Button>
@@ -546,10 +639,12 @@ export function AdminUserManagement({
                       size="sm"
                       onClick={() => onPageChange(Math.min(totalPages, page + 1))}
                       disabled={!hasNextPage}
+                      aria-label="Go to next page"
+                      className="min-h-[44px] min-w-[44px]"
                     >
                       Next
                     </Button>
-                  </div>
+                  </nav>
                 </div>
               )}
             </>
