@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { LandingHeader } from '@/components/layout/landing-header'
 import { Footer } from '@/components/landing-page'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Check, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 export function RequestDemoPage() {
@@ -53,22 +53,10 @@ export function RequestDemoPage() {
           </Link>
 
           {submitted ? (
-            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 shadow-card hover:shadow-popover transition-shadow duration-300">
               <CardContent className="flex flex-col items-center text-center py-16">
                 <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
-                  <svg
-                    className="h-8 w-8 text-primary"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <Check className="h-8 w-8 text-primary" aria-hidden />
                 </div>
                 <h1 className="text-h1 font-bold">Thanks for your interest!</h1>
                 <p className="mt-4 text-body text-muted-foreground">
@@ -81,7 +69,7 @@ export function RequestDemoPage() {
               </CardContent>
             </Card>
           ) : (
-            <Card>
+            <Card className="shadow-card hover:shadow-popover transition-shadow duration-300">
               <CardHeader>
                 <CardTitle className="text-h1">Request a demo</CardTitle>
                 <CardDescription>
@@ -99,6 +87,8 @@ export function RequestDemoPage() {
                       placeholder="Your name"
                       required
                       disabled={isSubmitting}
+                      aria-label="Your name"
+                      aria-required="true"
                       className="transition-all duration-200 focus:border-primary"
                     />
                   </div>
@@ -111,6 +101,8 @@ export function RequestDemoPage() {
                       placeholder="you@company.com"
                       required
                       disabled={isSubmitting}
+                      aria-label="Email address"
+                      aria-required="true"
                       className="transition-all duration-200 focus:border-primary"
                     />
                   </div>
@@ -121,6 +113,7 @@ export function RequestDemoPage() {
                       name="company"
                       placeholder="Your company"
                       disabled={isSubmitting}
+                      aria-label="Company name (optional)"
                       className="transition-all duration-200 focus:border-primary"
                     />
                   </div>
@@ -132,6 +125,7 @@ export function RequestDemoPage() {
                       placeholder="Tell us about your approval workflow needs..."
                       rows={4}
                       disabled={isSubmitting}
+                      aria-label="Message about your approval workflow needs (optional)"
                       className="transition-all duration-200 focus:border-primary resize-none"
                     />
                   </div>
@@ -140,8 +134,17 @@ export function RequestDemoPage() {
                     size="lg"
                     className="w-full"
                     disabled={isSubmitting}
+                    aria-busy={isSubmitting}
+                    aria-label={isSubmitting ? 'Sending demo request' : 'Request demo'}
                   >
-                    {isSubmitting ? 'Sending...' : 'Request demo'}
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                        Sending...
+                      </>
+                    ) : (
+                      'Request demo'
+                    )}
                   </Button>
                 </form>
               </CardContent>
