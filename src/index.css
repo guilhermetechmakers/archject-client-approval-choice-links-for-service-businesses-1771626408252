@@ -111,9 +111,9 @@
   .hero-gradient-bg {
     background: linear-gradient(
       135deg,
-      rgba(var(--primary), 0.08) 0%,
+      rgb(var(--primary) / 0.08) 0%,
       transparent 50%,
-      rgba(var(--primary), 0.05) 100%
+      rgb(var(--primary) / 0.05) 100%
     );
     background-size: 200% 200%;
     animation: gradient-shift 6s ease infinite;

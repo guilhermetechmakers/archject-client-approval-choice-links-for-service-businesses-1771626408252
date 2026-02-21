@@ -14,6 +14,7 @@ const navSections = [
   { hash: 'features', label: 'Features' },
   { hash: 'how-it-works', label: 'How it works' },
   { hash: 'pricing', label: 'Pricing' },
+  { hash: 'testimonials', label: 'Testimonials' },
 ]
 
 export function LandingHeader() {
