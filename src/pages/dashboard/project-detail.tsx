@@ -194,6 +194,8 @@ export function ProjectDetailPage() {
           events={timeline}
           isLoading={isLoading}
           searchQuery={searchQuery}
+          projectId={project.id}
+          onClearSearch={() => setSearchQuery('')}
         />
       </section>
 
