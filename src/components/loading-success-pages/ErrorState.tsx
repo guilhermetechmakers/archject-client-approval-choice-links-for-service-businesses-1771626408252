@@ -11,6 +11,8 @@ export interface ErrorStateProps {
   description?: string
   /** Retry button label */
   retryLabel?: string
+  /** Retry button aria-label for accessibility */
+  retryAriaLabel?: string
   /** Retry callback */
   onRetry?: () => void
   /** Layout variant */
@@ -28,6 +30,7 @@ export function ErrorState({
   heading = 'Something went wrong',
   description = 'There was a problem loading this content. Please try again.',
   retryLabel = 'Try again',
+  retryAriaLabel,
   onRetry,
   variant = 'card',
   className,
@@ -35,14 +38,19 @@ export function ErrorState({
   const content = (
     <>
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-        <Icon className="h-8 w-8 text-destructive" />
+        <Icon className="h-8 w-8 text-destructive" aria-hidden />
       </div>
       <h3 className="text-h3 font-semibold mt-4">{heading}</h3>
       <p className="text-body text-muted-foreground mt-2 max-w-md">
         {description}
       </p>
       {onRetry && (
-        <Button onClick={onRetry} className="mt-6" variant="outline">
+        <Button
+          onClick={onRetry}
+          className="mt-6"
+          variant="outline"
+          aria-label={retryAriaLabel ?? retryLabel}
+        >
           {retryLabel}
         </Button>
       )}

@@ -12,6 +12,88 @@ import {
 } from '@/components/project-detail'
 import { useProjectDetail, useArchiveProject } from '@/hooks/use-project-detail'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { ErrorState } from '@/components/loading-success-pages/ErrorState'
+
+function ProjectDetailSkeleton() {
+  return (
+    <div
+      className="space-y-8 animate-fade-in-up"
+      role="status"
+      aria-label="Loading project details"
+    >
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-24 rounded-md" />
+          <Skeleton className="h-8 w-64 rounded-md" />
+          <Skeleton className="h-4 w-40 rounded-md" />
+        </div>
+        <Skeleton className="h-10 w-40 rounded-md" />
+      </div>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <Skeleton className="h-10 w-full max-w-md rounded-md" />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card className="border-border bg-card shadow-card">
+          <CardHeader className="space-y-2">
+            <Skeleton className="h-6 w-40 rounded-md" />
+            <Skeleton className="h-4 w-56 rounded-md" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-20 w-full rounded-lg" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-border bg-card shadow-card">
+          <CardHeader className="space-y-2">
+            <Skeleton className="h-6 w-32 rounded-md" />
+            <Skeleton className="h-4 w-48 rounded-md" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-16 w-full rounded-lg" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="border-border bg-card shadow-card">
+        <CardHeader className="space-y-2">
+          <Skeleton className="h-6 w-28 rounded-md" />
+          <Skeleton className="h-4 w-40 rounded-md" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-14 w-full rounded-lg" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border bg-card shadow-card">
+        <CardHeader className="space-y-2">
+          <Skeleton className="h-6 w-36 rounded-md" />
+          <Skeleton className="h-4 w-52 rounded-md" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-12 w-full rounded-lg" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
 
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -33,88 +115,97 @@ export function ProjectDetailPage() {
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-border py-16 text-center animate-fade-in-up">
-        <h2 className="text-h2 font-semibold mb-2">Something went wrong</h2>
-        <p className="text-body text-muted-foreground mb-4 max-w-md">
-          {error instanceof Error ? error.message : 'Failed to load project'}
-        </p>
-        <button
-          type="button"
-          onClick={() => refetch()}
-          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-        >
-          Try again
-        </button>
-      </div>
+      <ErrorState
+        variant="full"
+        heading="Failed to load project"
+        description={
+          error instanceof Error ? error.message : 'Unable to load project details. Please try again.'
+        }
+        retryLabel="Try again"
+        retryAriaLabel="Retry loading project"
+        onRetry={() => refetch()}
+        className="min-h-[400px]"
+      />
     )
   }
 
   if (isLoading || !data) {
-    return (
-      <div className="space-y-8 animate-fade-in-up">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <Skeleton className="h-4 w-32 mb-2" />
-            <Skeleton className="h-8 w-64" />
-            <Skeleton className="h-4 w-40 mt-2" />
-          </div>
-        </div>
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Skeleton className="h-64" />
-          <Skeleton className="h-64" />
-        </div>
-        <Skeleton className="h-80" />
-      </div>
-    )
+    return <ProjectDetailSkeleton />
   }
 
   const { project, approval_requests, timeline, files, contacts } = data
 
   return (
-    <div className="space-y-8 animate-fade-in-up">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <ProjectHeader
-          project={project}
-          onArchive={handleArchive}
-          isArchiving={archiveMutation.isPending}
-        />
-        <CreateApprovalCTA projectId={project.id} />
-      </div>
+    <div className="space-y-8 animate-fade-in-up" role="main">
+      <section aria-labelledby="project-header-heading">
+        <h2 id="project-header-heading" className="sr-only">
+          Project overview
+        </h2>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <ProjectHeader
+            project={project}
+            onArchive={handleArchive}
+            isArchiving={archiveMutation.isPending}
+          />
+          <CreateApprovalCTA projectId={project.id} />
+        </div>
+      </section>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <ProjectSearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search approvals, files, contacts, timeline..."
-        />
-      </div>
+      <section aria-labelledby="project-search-heading">
+        <h2 id="project-search-heading" className="sr-only">
+          Search project content
+        </h2>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <ProjectSearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search approvals, files, contacts, timeline..."
+            ariaLabel="Search approvals, files, contacts, and timeline"
+          />
+        </div>
+      </section>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <ApprovalRequestsList
-          approvals={approval_requests}
+      <section aria-labelledby="approvals-contacts-heading">
+        <h2 id="approvals-contacts-heading" className="sr-only">
+          Approval requests and client contacts
+        </h2>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <ApprovalRequestsList
+            approvals={approval_requests}
+            isLoading={isLoading}
+            searchQuery={searchQuery}
+            statusFilter={statusFilter}
+            onStatusFilterChange={setStatusFilter}
+          />
+          <ClientContacts
+            contacts={contacts}
+            isLoading={isLoading}
+            searchQuery={searchQuery}
+          />
+        </div>
+      </section>
+
+      <section aria-labelledby="timeline-heading">
+        <h2 id="timeline-heading" className="sr-only">
+          Project timeline
+        </h2>
+        <TimelineView
+          events={timeline}
           isLoading={isLoading}
           searchQuery={searchQuery}
-          statusFilter={statusFilter}
-          onStatusFilterChange={setStatusFilter}
         />
-        <ClientContacts
-          contacts={contacts}
+      </section>
+
+      <section aria-labelledby="files-heading">
+        <h2 id="files-heading" className="sr-only">
+          Files and attachments
+        </h2>
+        <FilesAttachmentsSection
+          files={files}
           isLoading={isLoading}
           searchQuery={searchQuery}
         />
-      </div>
-
-      <TimelineView
-        events={timeline}
-        isLoading={isLoading}
-        searchQuery={searchQuery}
-      />
-
-      <FilesAttachmentsSection
-        files={files}
-        isLoading={isLoading}
-        searchQuery={searchQuery}
-      />
+      </section>
     </div>
   )
 }

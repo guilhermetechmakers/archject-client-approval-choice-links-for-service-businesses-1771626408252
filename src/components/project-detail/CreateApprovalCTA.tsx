@@ -12,9 +12,13 @@ export function CreateApprovalCTA({ projectId, className }: CreateApprovalCTAPro
   const createUrl = `/dashboard/approvals/new?project=${projectId}`
 
   return (
-    <Button asChild className={cn('transition-all duration-200 hover:scale-[1.02]', className)}>
+    <Button
+      asChild
+      className={cn('transition-all duration-200 hover:scale-[1.02]', className)}
+      aria-label="Create new approval request for this project"
+    >
       <Link to={createUrl}>
-        <Plus className="h-5 w-5" />
+        <Plus className="h-5 w-5" aria-hidden />
         Create Approval Request
       </Link>
     </Button>
