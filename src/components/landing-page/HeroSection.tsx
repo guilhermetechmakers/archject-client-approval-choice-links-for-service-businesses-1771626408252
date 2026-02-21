@@ -6,31 +6,37 @@ import { cn } from '@/lib/utils'
 export function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden py-24 md:py-32"
-      aria-labelledby="hero-heading"
+      className="relative overflow-hidden py-16 sm:py-24 md:py-32"
+      aria-labelledby="hero-heading hero-subheading"
     >
-      {/* Animated gradient mesh background */}
+      {/* Animated gradient mesh background - uses design tokens */}
       <div className="absolute inset-0 -z-10" aria-hidden="true">
         <div className="absolute inset-0 opacity-90 hero-gradient-bg" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgb(var(--primary)_/_0.15),transparent_50%)]" />
-        {/* Morphing blob shapes */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 80% at 50% -20%, rgb(var(--primary) / 0.15), transparent 50%)',
+          }}
+        />
+        {/* Morphing blob shapes - primary with opacity tokens */}
         <div
           className={cn(
-            'absolute -top-1/2 -right-1/4 h-[600px] w-[600px] rounded-full',
+            'absolute -top-1/2 -right-1/4 h-[400px] w-[400px] sm:h-[500px] sm:w-[500px] md:h-[600px] md:w-[600px] rounded-full',
             'bg-gradient-to-br from-primary/20 to-primary/5 blur-3xl animate-blob-morph'
           )}
           style={{ animationDuration: '8s' }}
         />
         <div
           className={cn(
-            'absolute -bottom-1/4 -left-1/4 h-[400px] w-[400px] rounded-full',
+            'absolute -bottom-1/4 -left-1/4 h-[300px] w-[300px] sm:h-[350px] sm:w-[350px] md:h-[400px] md:w-[400px] rounded-full',
             'bg-gradient-to-tr from-primary/15 to-primary/5 blur-3xl animate-blob-morph'
           )}
           style={{ animationDuration: '10s', animationDelay: '2s' }}
         />
         <div
           className={cn(
-            'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full',
+            'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[200px] w-[200px] sm:h-[250px] sm:w-[250px] md:h-[300px] md:w-[300px] rounded-full',
             'bg-primary/10 blur-3xl animate-float'
           )}
         />
@@ -40,7 +46,7 @@ export function HeroSection() {
         <div className="mx-auto max-w-3xl text-center">
           <h1
             id="hero-heading"
-            className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl animate-fade-in-up"
+            className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl animate-fade-in-up"
             style={{ animationFillMode: 'both' }}
           >
             Client approvals,{' '}
@@ -48,13 +54,14 @@ export function HeroSection() {
               simplified
             </span>
           </h1>
-          <p
-            className="mt-6 text-body-l text-muted-foreground max-w-2xl mx-auto animate-fade-in-up"
+          <h2
+            id="hero-subheading"
+            className="mt-6 text-body-l text-muted-foreground font-normal max-w-2xl mx-auto animate-fade-in-up"
             style={{ animationDelay: '100ms', animationFillMode: 'both' }}
           >
             Replace clunky email threads with branded, auditable choice links. Get
             timestamped, legally robust client decisions with minimal friction.
-          </p>
+          </h2>
           <div
             className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center animate-fade-in-up"
             style={{ animationDelay: '200ms', animationFillMode: 'both' }}
