@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
-import { Search, BookOpen, FileText, LayoutTemplate, ChevronRight } from 'lucide-react'
+import { Search, BookOpen, FileText, LayoutTemplate, ChevronRight, RotateCcw } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
@@ -78,7 +79,7 @@ export function SearchableKnowledgeBase() {
   }, [search])
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
       <CardHeader className="border-b border-border bg-muted/30">
         <CardTitle className="flex items-center gap-2">
           <Search className="h-5 w-5" />
@@ -102,18 +103,21 @@ export function SearchableKnowledgeBase() {
         <div className="divide-y divide-border">
           {filteredArticles.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-h3 font-semibold mb-2">No results found</h3>
-              <p className="text-body text-muted-foreground mb-4 max-w-sm">
+              <FileText className="h-12 w-12 text-muted-foreground mb-4" aria-hidden />
+              <h4 className="text-h3 font-semibold mb-2">No results found</h4>
+              <p className="text-body text-muted-foreground mb-6 max-w-sm">
                 Try a different search term or browse all articles above.
               </p>
-              <button
-                type="button"
+              <Button
                 onClick={() => setSearch('')}
-                className="text-primary hover:underline text-caption font-medium"
+                variant="default"
+                size="lg"
+                className="min-h-[44px] px-6"
+                aria-label="Clear search and show all articles"
               >
+                <RotateCcw className="h-4 w-4" aria-hidden />
                 Clear search
-              </button>
+              </Button>
             </div>
           ) : (
             filteredArticles.map((article, i) => {
@@ -123,15 +127,15 @@ export function SearchableKnowledgeBase() {
                   key={article.id}
                   href={`#article-${article.slug}`}
                   className={cn(
-                    'flex items-start gap-4 px-6 py-4 transition-all duration-200',
-                    'hover:bg-accent/50',
+                    'group flex items-start gap-4 px-6 py-4 transition-all duration-200 rounded-lg',
+                    'hover:bg-accent/50 hover:shadow-md',
                     'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
                     'animate-fade-in-up'
                   )}
                   style={{ animationDelay: `${i * 50}ms` }}
                 >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:shadow-sm">
+                    <Icon className="h-5 w-5" aria-hidden />
                   </div>
                   <div className="min-w-0 flex-1">
                     <h4 className="text-body font-semibold text-foreground group-hover:text-primary">
