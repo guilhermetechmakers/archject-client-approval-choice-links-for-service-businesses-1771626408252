@@ -48,12 +48,15 @@ export function PrimaryCTA({
           disabled={isResending}
           aria-label={isResending ? 'Sending verification email' : 'Resend verification email to your inbox'}
           aria-busy={isResending}
-          className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+          className={cn(
+            'w-full min-w-[12rem] transition-all duration-200 hover:scale-[1.02] hover:shadow-lg',
+            isResending && 'cursor-wait'
+          )}
         >
           {isResending ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-              Sending...
+              <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+              <span>Sending...</span>
             </>
           ) : (
             'Resend verification email'
@@ -77,8 +80,10 @@ export function PrimaryCTA({
   return (
     <div className={cn('space-y-3', className)}>
       {!hasEmail && (
-        <form onSubmit={handleSubmit} className="space-y-2">
-          <Label htmlFor="resend-email">Email address</Label>
+        <form onSubmit={handleSubmit} className="space-y-2" noValidate>
+          <Label htmlFor="resend-email" className="text-foreground">
+            Email address
+          </Label>
           <Input
             id="resend-email"
             name="email"
@@ -86,19 +91,24 @@ export function PrimaryCTA({
             placeholder="you@company.com"
             required
             disabled={isResending}
-            className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+            aria-label="Email address for verification"
+            aria-busy={isResending}
+            className="transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           />
           <Button
             type="submit"
             disabled={isResending}
             aria-label={isResending ? 'Sending verification email' : 'Submit email and resend verification'}
             aria-busy={isResending}
-            className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            className={cn(
+              'w-full min-w-[12rem] transition-all duration-200 hover:scale-[1.02] hover:shadow-lg',
+              isResending && 'cursor-wait'
+            )}
           >
             {isResending ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                Sending...
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+                <span>Sending...</span>
               </>
             ) : (
               'Resend verification email'
@@ -112,12 +122,15 @@ export function PrimaryCTA({
           disabled={isResending}
           aria-label={isResending ? 'Sending verification email' : 'Resend verification email to your inbox'}
           aria-busy={isResending}
-          className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+          className={cn(
+            'w-full min-w-[12rem] transition-all duration-200 hover:scale-[1.02] hover:shadow-lg',
+            isResending && 'cursor-wait'
+          )}
         >
           {isResending ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-              Sending...
+              <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+              <span>Sending...</span>
             </>
           ) : (
             'Resend verification email'
