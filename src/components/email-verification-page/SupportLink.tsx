@@ -17,6 +17,7 @@ export function SupportLink({ className }: SupportLinkProps) {
       Need help?{' '}
       <Link
         to="/about/help-center"
+        aria-label="Contact support if verification fails"
         className="inline-flex items-center gap-1.5 text-primary transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
       >
         <HelpCircle className="h-4 w-4" aria-hidden />

@@ -79,7 +79,7 @@ export function EmailVerificationPage() {
     <div className="min-h-screen flex flex-col">
       <LandingHeader />
       <main className="flex-1 flex items-center justify-center p-6">
-        <Card className="w-full max-w-md animate-in">
+        <Card className="w-full max-w-md rounded-2xl shadow-card hover:shadow-popover transition-shadow duration-300 animate-in">
           <CardContent className="pt-6 space-y-6">
             <VerificationStatusBanner
               status={status}
@@ -111,7 +111,7 @@ export function EmailVerificationPageSkeleton() {
     <div className="min-h-screen flex flex-col">
       <LandingHeader />
       <main className="flex-1 flex items-center justify-center p-6">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md rounded-2xl shadow-card">
           <CardContent className="pt-6 space-y-6">
             <div className="space-y-4 text-center">
               <Skeleton className="mx-auto h-16 w-16 rounded-full" />

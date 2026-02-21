@@ -33,6 +33,7 @@ export function PrimaryCTA({
           'w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg',
           className
         )}
+        aria-label="Go to your dashboard"
       >
         <Link to="/dashboard">Go to dashboard</Link>
       </Button>
@@ -45,6 +46,8 @@ export function PrimaryCTA({
         <Button
           onClick={() => onResend?.()}
           disabled={isResending}
+          aria-label={isResending ? 'Sending verification email' : 'Resend verification email to your inbox'}
+          aria-busy={isResending}
           className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
         >
           {isResending ? (
@@ -56,7 +59,7 @@ export function PrimaryCTA({
             'Resend verification email'
           )}
         </Button>
-        <Button variant="outline" asChild className="w-full">
+        <Button variant="outline" asChild className="w-full" aria-label="Return to login page">
           <Link to="/login">Back to login</Link>
         </Button>
       </div>
@@ -88,6 +91,8 @@ export function PrimaryCTA({
           <Button
             type="submit"
             disabled={isResending}
+            aria-label={isResending ? 'Sending verification email' : 'Submit email and resend verification'}
+            aria-busy={isResending}
             className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
           >
             {isResending ? (
@@ -105,6 +110,8 @@ export function PrimaryCTA({
         <Button
           onClick={() => onResend?.()}
           disabled={isResending}
+          aria-label={isResending ? 'Sending verification email' : 'Resend verification email to your inbox'}
+          aria-busy={isResending}
           className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
         >
           {isResending ? (
@@ -117,7 +124,7 @@ export function PrimaryCTA({
           )}
         </Button>
       )}
-      <Button variant="outline" asChild className="w-full">
+      <Button variant="outline" asChild className="w-full" aria-label="Return to login page">
         <Link to="/login">Back to login</Link>
       </Button>
     </div>

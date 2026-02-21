@@ -29,7 +29,7 @@ export function VerificationStatusBanner({
       aria-live="polite"
       aria-label={`Verification ${statusLabel}`}
       className={cn(
-        'rounded-lg border p-6 text-center transition-all duration-300',
+        'rounded-2xl border p-6 text-center shadow-card transition-all duration-300',
         'animate-in',
         isSuccess && 'border-success/30 bg-success/5',
         isError && 'border-destructive/30 bg-destructive/5',
