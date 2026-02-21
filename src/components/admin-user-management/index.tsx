@@ -423,7 +423,7 @@ export function AdminUserManagement({
             <>
               <div className="hidden md:block rounded-lg border border-border overflow-hidden">
                 <div className="overflow-x-auto">
-                  <Table>
+                  <Table aria-label="Users table with columns for selection, name, email, role, and actions">
                     <TableHeader>
                       {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow
